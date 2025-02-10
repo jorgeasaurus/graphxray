@@ -183,9 +183,9 @@ class DevTools extends React.Component {
             <h2>Graph Call Stack Trace</h2>
             <p>
               Displays the Graph API calls that are being made by the current
-              browser tab. This functionality is available on Azure Active
-              Directory blades that use Graph API (E.g. Users, Groups,
-              Enterprise Applications, Administrative Units, etc).
+              browser tab. This functionality is available on Entra ID blades
+              that use Graph API (E.g. Users, Groups, Enterprise Applications,
+              Administrative Units, etc).
             </p>
             <Dropdown
               placeholder="Select an option"

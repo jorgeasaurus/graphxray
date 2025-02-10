@@ -1,7 +1,7 @@
 ---
 portalUri: "https://portal.azure.com/#blade/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/Overview"
 ---
-# Azure Active Directory Overview
+# Entra ID Overview
 
 ## Organization
 
