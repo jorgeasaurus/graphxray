@@ -1,5 +1,5 @@
 const devxEndPoint =
-  "https://graphexplorerapi.azurewebsites.net/api/graphexplorersnippets";
+  "https://devxapi-func-prod-eastus.azurewebsites.net/api/graphexplorersnippets";
 
 const getPowershellCmd = async function (snippetLanguage, method, url, body) {
   if (url.includes("$batch")) {
