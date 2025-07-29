@@ -19,7 +19,9 @@
   ],
   "host_permissions": [
     "https://portal.azure.com/",
-    "https://graph.microsoft.com/"
+    "https://portal.azure.us/",
+    "https://graph.microsoft.com/",
+    "https://graph.microsoft.us/"
   ],
   "icons": {
     "16": "img/icon-16.png",

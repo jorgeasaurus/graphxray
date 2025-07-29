@@ -10,12 +10,20 @@ const getPowershellCmd = async function (snippetLanguage, method, url, body) {
   console.log("Get code snippet from DevX:", url, method);
   const bodyText = body ?? ""; //Cast undefined and null to string
   let path = url;
+  let host = "graph.microsoft.com";
+
+  // Handle both .com and .us endpoints
   if (url.includes("https://graph.microsoft.com")) {
     //Urls inside batch don't include host info.
     path = url.split("/graph.microsoft.com")[1];
+    host = "graph.microsoft.com";
+  } else if (url.includes("https://graph.microsoft.us")) {
+    //Urls inside batch don't include host info.
+    path = url.split("/graph.microsoft.us")[1];
+    host = "graph.microsoft.us";
   }
   path = encodeURI(path); //Replace the spaces in OData with + as expected by API
-  const payload = `${method} ${path} HTTP/1.1\r\nHost: graph.microsoft.com\r\nContent-Type: application/json\r\n\r\n${bodyText}`;
+  const payload = `${method} ${path} HTTP/1.1\r\nHost: ${host}\r\nContent-Type: application/json\r\n\r\n${bodyText}`;
   console.log("Payload:", payload);
 
   const snippetParam = "?lang=%snippetLanguage%".replace(
@@ -47,7 +55,8 @@ const getPowershellCmd = async function (snippetLanguage, method, url, body) {
       console.log("DevX-Reponse", resp);
       return resp;
     } else {
-      console.error(`DevXError : for ${url} "`, response.status);
+      const errorMsg = `DevXError: ${response.status} ${response.statusText} for ${method} ${url}`;
+      console.error(errorMsg);
       return null;
     }
   } catch (error) {

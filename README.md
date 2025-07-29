@@ -2,6 +2,18 @@
 
 This is a Chromium (Edge and Chrome) extension, and was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Supported Microsoft Graph Endpoints
+
+The extension detects and generates code snippets for Microsoft Graph calls across:
+- **graph.microsoft.com** (Public cloud)
+- **graph.microsoft.us** (US Government cloud - GCC High)
+
+## Supported Azure Portal Environments
+
+The extension works with:
+- **portal.azure.com** (Public cloud)
+- **portal.azure.us** (US Government cloud)
+
 ## Cloning on Windows
 To avoid issues with prettier formatting for line feeds turn off auto crlf before cloning.
 `git config --global core.autocrlf false` to disable git

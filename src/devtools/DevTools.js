@@ -125,7 +125,8 @@ class DevTools extends React.Component {
         if (
           request.request &&
           request.request.url &&
-          request.request.url.includes("https://graph.microsoft.com")
+          (request.request.url.includes("https://graph.microsoft.com") ||
+            request.request.url.includes("https://graph.microsoft.us"))
         ) {
           request = request.request;
 
@@ -146,7 +147,7 @@ class DevTools extends React.Component {
     if (request.url.includes("/$batch") && requestBody) {
       await this.getBatchRequests(request, requestBody);
     } else {
-      await this.addRequestToStack(request);
+      await this.addRequestToStack(request, "");
     }
   }
 
