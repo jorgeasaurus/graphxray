@@ -25,7 +25,6 @@ const getPowershellCmd = async function (snippetLanguage, method, url, body) {
 
   console.log("Get code snippet from DevX:", url, method);
   const bodyText = body ?? ""; //Cast undefined and null to string
-  
   // Use the extracted parseGraphUrl function
   const { path: parsedPath, host } = parseGraphUrl(url);
   const path = encodeURI(parsedPath); //Replace the spaces in OData with + as expected by API
@@ -67,7 +66,9 @@ const getPowershellCmd = async function (snippetLanguage, method, url, body) {
       return null;
     }
   } catch (error) {
-    const errorMsg = `DevXError: Network/Request error for ${method} ${url} - ${error.message || error}`;
+    const errorMsg = `DevXError: Network/Request error for ${method} ${url} - ${
+      error.message || error
+    }`;
     console.error(errorMsg, error);
   }
 };
