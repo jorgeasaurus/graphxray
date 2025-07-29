@@ -1,6 +1,22 @@
 const devxEndPoint =
   "https://devxapi-func-prod-eastus.azurewebsites.net/api/graphexplorersnippets";
 
+const parseGraphUrl = function (url) {
+  let path = url;
+  let host = "graph.microsoft.com";
+
+  // Handle both .com and .us endpoints
+  if (url.includes("https://graph.microsoft.com")) {
+    path = url.split("/graph.microsoft.com")[1];
+    host = "graph.microsoft.com";
+  } else if (url.includes("https://graph.microsoft.us")) {
+    path = url.split("/graph.microsoft.us")[1];
+    host = "graph.microsoft.us";
+  }
+
+  return { path, host };
+};
+
 const getPowershellCmd = async function (snippetLanguage, method, url, body) {
   if (url.includes("$batch")) {
     console.log("Batch graph call. Ignoring for code snippet.");
@@ -9,20 +25,10 @@ const getPowershellCmd = async function (snippetLanguage, method, url, body) {
 
   console.log("Get code snippet from DevX:", url, method);
   const bodyText = body ?? ""; //Cast undefined and null to string
-  let path = url;
-  let host = "graph.microsoft.com";
-
-  // Handle both .com and .us endpoints
-  if (url.includes("https://graph.microsoft.com")) {
-    //Urls inside batch don't include host info.
-    path = url.split("/graph.microsoft.com")[1];
-    host = "graph.microsoft.com";
-  } else if (url.includes("https://graph.microsoft.us")) {
-    //Urls inside batch don't include host info.
-    path = url.split("/graph.microsoft.us")[1];
-    host = "graph.microsoft.us";
-  }
-  path = encodeURI(path); //Replace the spaces in OData with + as expected by API
+  
+  // Use the extracted parseGraphUrl function
+  const { path: parsedPath, host } = parseGraphUrl(url);
+  const path = encodeURI(parsedPath); //Replace the spaces in OData with + as expected by API
   const payload = `${method} ${path} HTTP/1.1\r\nHost: ${host}\r\nContent-Type: application/json\r\n\r\n${bodyText}`;
   console.log("Payload:", payload);
 
@@ -55,12 +61,14 @@ const getPowershellCmd = async function (snippetLanguage, method, url, body) {
       console.log("DevX-Reponse", resp);
       return resp;
     } else {
-      const errorMsg = `DevXError: ${response.status} ${response.statusText} for ${method} ${url}`;
+      const errorText = await response.text();
+      const errorMsg = `DevXError: ${response.status} ${response.statusText} for ${method} ${url} - Response: ${errorText}`;
       console.error(errorMsg);
       return null;
     }
   } catch (error) {
-    console.error(error);
+    const errorMsg = `DevXError: Network/Request error for ${method} ${url} - ${error.message || error}`;
+    console.error(errorMsg, error);
   }
 };
 
