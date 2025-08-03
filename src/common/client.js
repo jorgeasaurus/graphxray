@@ -5,13 +5,19 @@ const parseGraphUrl = function (url) {
   let path = url;
   let host = "graph.microsoft.com";
 
-  // Handle both .com and .us endpoints
+  // Handle all known Graph API endpoints
   if (url.includes("https://graph.microsoft.com")) {
     path = url.split("/graph.microsoft.com")[1];
     host = "graph.microsoft.com";
   } else if (url.includes("https://graph.microsoft.us")) {
     path = url.split("/graph.microsoft.us")[1];
     host = "graph.microsoft.us";
+  } else if (url.includes("https://graph.microsoft.de")) {
+    path = url.split("/graph.microsoft.de")[1];
+    host = "graph.microsoft.de";
+  } else if (url.includes("https://microsoftgraph.chinacloudapi.cn")) {
+    path = url.split("/microsoftgraph.chinacloudapi.cn")[1];
+    host = "microsoftgraph.chinacloudapi.cn";
   }
 
   return { path, host };
