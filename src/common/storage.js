@@ -1,9 +1,11 @@
+import { browserAPI } from "./browser-polyfill.js";
+
 // let localObj = {};
 
 const saveObjectInLocalStorage = async function (obj) {
   return new Promise((resolve, reject) => {
     try {
-      chrome.storage.local.set(obj, function () {
+      browserAPI.storage.local.set(obj, function () {
         resolve();
       });
     } catch (ex) {
@@ -36,7 +38,7 @@ const getObjectFromLocalStorage = async function (key) {
       //   console.log(localObj);
       //   resolve(localObj);
       // }
-      chrome.storage.local.get(key, function (value) {
+      browserAPI.storage.local.get(key, function (value) {
         resolve(value[key]);
       });
     } catch (ex) {

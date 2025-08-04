@@ -2,7 +2,7 @@ import React from "react";
 import "./Options.css";
 import { AppHeader } from "../components/AppHeader";
 import { FontSizes } from "@fluentui/theme";
-import { PrimaryButton, DefaultPalette, getTheme } from "@fluentui/react";
+import { getTheme } from "@fluentui/react";
 import { initializeIcons } from "@fluentui/font-icons-mdl2";
 
 const theme = getTheme();

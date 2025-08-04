@@ -1,7 +1,9 @@
+import { browserAPI } from "./browser-polyfill.js";
+
 export const getActiveTab = async function () {
   return new Promise((resolve, reject) => {
     try {
-      chrome.tabs.query(
+      browserAPI.tabs.query(
         { active: true, currentWindow: true },
         function (value) {
           resolve(value);
@@ -16,7 +18,7 @@ export const getActiveTab = async function () {
 export const getStartTab = async function () {
   return new Promise((resolve, reject) => {
     try {
-      chrome.tabs.query(
+      browserAPI.tabs.query(
         {
           active: true,
         },

@@ -1,14 +1,23 @@
+/* eslint-disable no-redeclare */
 import React from "react";
 import "./DevTools.css";
 import { CodeView } from "../components/CodeView";
 import { AppHeader } from "../components/AppHeader";
 import { FontSizes } from "@fluentui/theme";
-import { PrimaryButton, DefaultPalette, getTheme } from "@fluentui/react";
+import { getTheme } from "@fluentui/react";
 import { getRequestBody, getCodeView } from "../common/client.js";
 import { Dropdown } from "@fluentui/react/lib/Dropdown";
 import DevToolsCommandBar from "../components/DevToolsCommandBar";
 import { initializeIcons } from "@fluentui/font-icons-mdl2";
-import { Layer, LayerHost } from "@fluentui/react/lib/Layer";
+import { Layer } from "@fluentui/react/lib/Layer";
+
+// Browser compatibility
+const devtoolsAPI =
+  typeof browser !== "undefined" && browser.devtools
+    ? browser.devtools
+    : typeof chrome !== "undefined" && chrome.devtools
+    ? chrome.devtools
+    : null;
 
 const theme = getTheme();
 initializeIcons();
@@ -109,7 +118,7 @@ class DevTools extends React.Component {
   async getBatchRequests(request, requestBody) {
     const version = request.url.split("/$batch")[0];
     let requests = JSON.parse(requestBody)?.requests;
-    let calls = await Promise.all(
+    await Promise.all(
       requests.map(async (request) => {
         await this.addRequestToStack(request, version);
       })
@@ -117,10 +126,10 @@ class DevTools extends React.Component {
   }
 
   addListener() {
-    if (!chrome.devtools) {
+    if (!devtoolsAPI) {
       return;
     }
-    chrome.devtools.network.onRequestFinished.addListener(async (request) => {
+    devtoolsAPI.network.onRequestFinished.addListener(async (request) => {
       try {
         if (
           request.request &&
