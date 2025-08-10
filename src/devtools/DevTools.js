@@ -127,10 +127,8 @@ class DevTools extends React.Component {
           request.request.url &&
           (request.request.url.includes("https://graph.microsoft.com") ||
             request.request.url.includes("https://graph.microsoft.us") ||
-            request.request.url.includes("https://graph.microsoft.de") ||
-            request.request.url.includes(
-              "https://microsoftgraph.chinacloudapi.cn"
-            ))
+            request.request.url.includes("https://dod-graph.microsoft.us") ||
+            request.request.url.includes("https://microsoftgraph.chinacloudapi.cn"))
         ) {
           request = request.request;
 
