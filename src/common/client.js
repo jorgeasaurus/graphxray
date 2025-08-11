@@ -27,11 +27,6 @@ const parseGraphUrl = function (url) {
 };
 
 const getPowershellCmd = async function (snippetLanguage, method, url, body) {
-  if (url.includes("$batch")) {
-    console.log("Batch graph call. Ignoring for code snippet.");
-    return null;
-  }
-
   console.log("Get code snippet from DevX:", url, method);
   const bodyText = body ?? ""; //Cast undefined and null to string
   // Use the extracted parseGraphUrl function
@@ -255,6 +250,56 @@ const getResponseContent = async function (harEntry) {
   return responseContent;
 };
 
+const getBatchCodeSnippets = async function (snippetLanguage, requestBody, baseUrl) {
+  console.log("Generating code snippets for batch request");
+  
+  if (!requestBody) {
+    return [];
+  }
+  
+  try {
+    const batchData = JSON.parse(requestBody);
+    if (!batchData.requests) {
+      return [];
+    }
+    
+    const codeSnippets = [];
+    
+    for (const request of batchData.requests) {
+      console.log("Generating snippet for batch request:", request.id, request.method, request.url);
+      
+      // Construct full URL for the individual request
+      const fullUrl = `${baseUrl}${request.url}`;
+      
+      // Get the body for this individual request
+      const requestBodyText = request.body ? JSON.stringify(request.body) : "";
+      
+      // Generate code snippet for this individual request
+      const code = await getPowershellCmd(
+        snippetLanguage,
+        request.method,
+        fullUrl,
+        requestBodyText
+      );
+      
+      if (code) {
+        codeSnippets.push({
+          id: request.id,
+          method: request.method,
+          url: request.url,
+          code: code
+        });
+      }
+    }
+    
+    console.log("Generated", codeSnippets.length, "code snippets for batch request");
+    return codeSnippets;
+  } catch (error) {
+    console.log("Error generating batch code snippets:", error);
+    return [];
+  }
+};
+
 const getCodeView = async function (snippetLanguage, request, version, harEntry = null) {
   if (["OPTIONS"].includes(request.method)) {
     return null;
@@ -262,19 +307,42 @@ const getCodeView = async function (snippetLanguage, request, version, harEntry 
   console.log("GetCodeView", snippetLanguage, request, harEntry);
   const requestBody = await getRequestBody(request);
   const responseContent = harEntry ? await getResponseContent(harEntry) : "";
-  const code = await getPowershellCmd(
-    snippetLanguage,
-    request.method,
-    version + request.url,
-    requestBody
-  );
+  
+  let code = null;
+  let batchCodeSnippets = [];
+  
+  // Check if this is a batch request
+  if (request.url.includes("/$batch")) {
+    console.log("Processing batch request for code generation");
+    // Extract base URL for batch requests
+    const baseUrl = request.url.split("/$batch")[0];
+    batchCodeSnippets = await getBatchCodeSnippets(snippetLanguage, requestBody, baseUrl);
+    
+    // Also generate a code snippet for the main batch request
+    code = await getPowershellCmd(
+      snippetLanguage,
+      request.method,
+      version + request.url,
+      requestBody
+    );
+  } else {
+    // Regular single request
+    code = await getPowershellCmd(
+      snippetLanguage,
+      request.method,
+      version + request.url,
+      requestBody
+    );
+  }
+  
   const codeView = {
     displayRequestUrl: request.method + " " + request.url,
     requestBody: requestBody,
     responseContent: responseContent,
     code: code,
+    batchCodeSnippets: batchCodeSnippets, // Add batch code snippets to the result
   };
   console.log("CodeView", codeView);
   return codeView;
 };
-export { getPowershellCmd, getRequestBody, getResponseContent, getCodeView };
+export { getPowershellCmd, getRequestBody, getResponseContent, getCodeView, getBatchCodeSnippets };

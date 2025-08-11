@@ -4,7 +4,7 @@ import { CodeView } from "../components/CodeView";
 import { AppHeader } from "../components/AppHeader";
 import { FontSizes } from "@fluentui/theme";
 import { PrimaryButton, DefaultPalette, getTheme } from "@fluentui/react";
-import { getRequestBody, getCodeView } from "../common/client.js";
+import { getCodeView } from "../common/client.js";
 import { Dropdown } from "@fluentui/react/lib/Dropdown";
 import DevToolsCommandBar from "../components/DevToolsCommandBar";
 import { initializeIcons } from "@fluentui/font-icons-mdl2";
@@ -114,16 +114,6 @@ class DevTools extends React.Component {
     }
   }
 
-  async getBatchRequests(request, requestBody) {
-    const version = request.url.split("/$batch")[0];
-    let requests = JSON.parse(requestBody)?.requests;
-    await Promise.all(
-      requests.map(async (request) => {
-        await this.addRequestToStack(request, version);
-      })
-    );
-  }
-
   addListener() {
     if (!chrome.devtools) {
       return;
@@ -159,10 +149,9 @@ class DevTools extends React.Component {
   async showRequest(request, harEntry = null) {
     console.log("DevTools - showRequest called with:", request, harEntry);
     if (request.url.includes("/$batch")) {
-      const requestBody = await getRequestBody(request);
-      if (requestBody) {
-        await this.getBatchRequests(request, requestBody);
-      }
+      console.log("Processing batch request - keeping as single unit");
+      // For batch requests, treat them as a single unit to preserve request/response matching
+      await this.addRequestToStack(request, "", harEntry);
     } else {
       await this.addRequestToStack(request, "", harEntry);
     }

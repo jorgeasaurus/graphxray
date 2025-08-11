@@ -39,11 +39,95 @@ export const CodeView = ({ request, lightUrl, snippetLanguage }) => {
     }
   };
 
+  // Function to handle batch request/response matching
+  const processBatchContent = (requestBody, responseContent) => {
+    console.log("=== BATCH PROCESSING DEBUG ===");
+    console.log("Request body:", requestBody);
+    console.log("Response content:", responseContent);
+    console.log("Request URL:", request.displayRequestUrl);
+    
+    // Check if this is a batch endpoint
+    const isBatchEndpoint = request.displayRequestUrl && request.displayRequestUrl.includes('/$batch');
+    console.log("Is batch endpoint (/$batch):", isBatchEndpoint);
+    
+    if (!requestBody || !responseContent) {
+      console.log("Missing request body or response content");
+      return { requestBody, responseContent };
+    }
+
+    try {
+      const requestData = JSON.parse(requestBody);
+      const responseData = JSON.parse(responseContent);
+
+      console.log("Parsed request data:", requestData);
+      console.log("Parsed response data:", responseData);
+
+      // Check if this is a batch request/response
+      const hasBatchStructure = requestData.requests && responseData.responses;
+      console.log("Has batch structure:", hasBatchStructure);
+      
+      if (isBatchEndpoint && hasBatchStructure) {
+        console.log("✅ Detected batch request/response");
+        console.log("Number of requests:", requestData.requests.length);
+        console.log("Number of responses:", responseData.responses.length);
+        
+        // Create a map of responses by ID
+        const responseMap = {};
+        responseData.responses.forEach(response => {
+          console.log("Response ID:", response.id, "Status:", response.status);
+          if (response.id) {
+            responseMap[response.id] = response;
+          }
+        });
+
+        console.log("Response map:", responseMap);
+
+        // Match requests with their responses
+        const matchedPairs = [];
+        requestData.requests.forEach(request => {
+          console.log("Processing request ID:", request.id, "Method:", request.method, "URL:", request.url);
+          if (request.id && responseMap[request.id]) {
+            const response = responseMap[request.id];
+            console.log("✅ Found matching response for request ID:", request.id);
+            matchedPairs.push({
+              id: request.id,
+              request: request,
+              response: response,
+              responseBody: response.body ? JSON.stringify(response.body, null, 2) : null
+            });
+          } else {
+            console.log("❌ No matching response found for request ID:", request.id);
+          }
+        });
+
+        console.log("Final matched pairs:", matchedPairs.length);
+        
+        return { 
+          isBatch: true, 
+          matchedPairs: matchedPairs,
+          originalRequest: requestBody,
+          originalResponse: responseContent
+        };
+      } else {
+        console.log("❌ Not a batch request/response");
+        console.log("Is batch endpoint:", isBatchEndpoint);
+        console.log("Has requests:", !!requestData.requests);
+        console.log("Has responses:", !!responseData.responses);
+      }
+    } catch (e) {
+      console.log("❌ Error processing batch content:", e);
+      console.log("Error parsing JSON. Request body type:", typeof requestBody);
+      console.log("Response content type:", typeof responseContent);
+    }
+
+    console.log("=== END BATCH PROCESSING DEBUG ===");
+    return { requestBody, responseContent };
+  };
+
   const copyToClipboard = async (text) => {
     try {
       await navigator.clipboard.writeText(text);
       console.log("Copied to clipboard:", text);
-      // You could add visual feedback here (like a brief "Copied!" message)
     } catch (err) {
       console.error("Failed to copy text: ", err);
       // Fallback for older browsers
@@ -59,6 +143,9 @@ export const CodeView = ({ request, lightUrl, snippetLanguage }) => {
   const toggleRequestBody = () => {
     setIsRequestBodyExpanded(!isRequestBodyExpanded);
   };
+
+  // Process batch content if applicable
+  const batchData = processBatchContent(request.requestBody, request.responseContent);
 
   return (
     <div>
@@ -101,7 +188,7 @@ export const CodeView = ({ request, lightUrl, snippetLanguage }) => {
                 customStyle={{
                   borderRadius: "8px",
                   padding: "12px",
-                  paddingRight: "50px", // Make room for copy button
+                  paddingRight: "50px",
                   margin: 0
                 }}
               >
@@ -144,6 +231,7 @@ export const CodeView = ({ request, lightUrl, snippetLanguage }) => {
               />
             </div>
           </div>
+
           {isRequestBodyExpanded && ((request.requestBody && request.requestBody.length > 0) || (request.responseContent && request.responseContent.length > 0)) && (
             <div style={{
               border: "2px solid rgba(0, 0, 0, 0.2)",
@@ -152,126 +240,277 @@ export const CodeView = ({ request, lightUrl, snippetLanguage }) => {
               marginBottom: "10px",
               backgroundColor: "rgba(0, 0, 0, 0.02)"
             }}>
-              {request.requestBody && request.requestBody.length > 0 && (
-                <div style={{ marginBottom: request.responseContent && request.responseContent.length > 0 ? "15px" : "0" }}>
-                  <div style={{
-                    fontSize: "14px",
-                    fontWeight: "bold",
-                    color: "#333",
-                    marginBottom: "8px"
-                  }}>
-                    Request
-                  </div>
-                  <div style={{ position: "relative" }}>
-                    <SyntaxHighlighter
-                      language="json"
-                      style={atomOneDark}
-                      wrapLongLines={true}
-                      customStyle={{
-                        borderRadius: "8px",
-                        padding: "12px",
-                        paddingRight: "50px" // Make room for copy button
-                      }}
-                    >
-                      {formatJsonContent(request.requestBody)}
-                    </SyntaxHighlighter>
-                    <IconButton
-                      iconProps={{ iconName: "Copy" }}
-                      title="Copy request body to clipboard"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        copyToClipboard(request.requestBody);
-                      }}
-                      onMouseEnter={() => setHoveredButton('body-copy')}
-                      onMouseLeave={() => setHoveredButton(null)}
-                      styles={{
-                        root: {
-                          position: "absolute",
-                          top: "8px",
-                          right: "8px",
-                          backgroundColor: hoveredButton === 'body-copy'
-                            ? "rgba(255, 255, 255, 0.25)"
-                            : "rgba(255, 255, 255, 0.1)",
-                          color: "#fff",
-                          border: hoveredButton === 'body-copy'
-                            ? "1px solid rgba(255, 255, 255, 0.4)"
-                            : "1px solid transparent",
-                          borderRadius: "4px",
-                          padding: "4px",
-                          cursor: "pointer",
-                          minWidth: "32px",
-                          width: "32px",
-                          height: "32px",
-                          transition: "all 0.2s ease",
-                          boxShadow: hoveredButton === 'body-copy'
-                            ? "0 2px 6px rgba(0, 0, 0, 0.2)"
-                            : "none"
-                        }
-                      }}
-                    />
-                  </div>
-                </div>
-              )}
-              {request.responseContent && request.responseContent.length > 0 && (
+              {batchData.isBatch ? (
+                // Special handling for batch requests
                 <div>
                   <div style={{
-                    fontSize: "14px",
+                    fontSize: "16px",
                     fontWeight: "bold",
                     color: "#333",
-                    marginBottom: "8px"
+                    marginBottom: "16px"
                   }}>
-                    Response
+                    Batch Request/Response Pairs
                   </div>
-                  <div style={{ position: "relative" }}>
-                    <SyntaxHighlighter
-                      language="json"
-                      style={atomOneDark}
-                      wrapLongLines={true}
-                      customStyle={{
-                        borderRadius: "8px",
-                        padding: "12px",
-                        paddingRight: "50px" // Make room for copy button
-                      }}
-                    >
-                      {formatJsonContent(request.responseContent)}
-                    </SyntaxHighlighter>
-                    <IconButton
-                      iconProps={{ iconName: "Copy" }}
-                      title="Copy response to clipboard"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        copyToClipboard(request.responseContent);
-                      }}
-                      onMouseEnter={() => setHoveredButton('response-copy')}
-                      onMouseLeave={() => setHoveredButton(null)}
-                      styles={{
-                        root: {
-                          position: "absolute",
-                          top: "8px",
-                          right: "8px",
-                          backgroundColor: hoveredButton === 'response-copy'
-                            ? "rgba(255, 255, 255, 0.25)"
-                            : "rgba(255, 255, 255, 0.1)",
-                          color: "#fff",
-                          border: hoveredButton === 'response-copy'
-                            ? "1px solid rgba(255, 255, 255, 0.4)"
-                            : "1px solid transparent",
-                          borderRadius: "4px",
-                          padding: "4px",
-                          cursor: "pointer",
-                          minWidth: "32px",
-                          width: "32px",
-                          height: "32px",
-                          transition: "all 0.2s ease",
-                          boxShadow: hoveredButton === 'response-copy'
-                            ? "0 2px 6px rgba(0, 0, 0, 0.2)"
-                            : "none"
-                        }
-                      }}
-                    />
-                  </div>
+                  {batchData.matchedPairs.map((pair, index) => (
+                    <div key={pair.id} style={{
+                      border: "1px solid rgba(0, 0, 0, 0.1)",
+                      borderRadius: "6px",
+                      padding: "12px",
+                      marginBottom: index < batchData.matchedPairs.length - 1 ? "16px" : "0",
+                      backgroundColor: "rgba(255, 255, 255, 0.5)"
+                    }}>
+                      <div style={{
+                        fontSize: "14px",
+                        fontWeight: "bold",
+                        color: "#666",
+                        marginBottom: "8px"
+                      }}>
+                        Request ID: {pair.id}
+                      </div>
+                      
+                      {/* Individual Request */}
+                      <div style={{ marginBottom: "12px" }}>
+                        <div style={{
+                          fontSize: "12px",
+                          fontWeight: "bold",
+                          color: "#333",
+                          marginBottom: "6px"
+                        }}>
+                          Request: {pair.request.method} {pair.request.url}
+                        </div>
+                        <div style={{ position: "relative" }}>
+                          <SyntaxHighlighter
+                            language="json"
+                            style={atomOneDark}
+                            wrapLongLines={true}
+                            customStyle={{
+                              borderRadius: "6px",
+                              padding: "8px",
+                              paddingRight: "40px",
+                              fontSize: "12px"
+                            }}
+                          >
+                            {formatJsonContent(JSON.stringify(pair.request, null, 2))}
+                          </SyntaxHighlighter>
+                          <IconButton
+                            iconProps={{ iconName: "Copy" }}
+                            title="Copy request to clipboard"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              copyToClipboard(JSON.stringify(pair.request, null, 2));
+                            }}
+                            onMouseEnter={() => setHoveredButton(`batch-req-${index}`)}
+                            onMouseLeave={() => setHoveredButton(null)}
+                            styles={{
+                              root: {
+                                position: "absolute",
+                                top: "6px",
+                                right: "6px",
+                                backgroundColor: hoveredButton === `batch-req-${index}`
+                                  ? "rgba(255, 255, 255, 0.25)"
+                                  : "rgba(255, 255, 255, 0.1)",
+                                color: "#fff",
+                                border: "1px solid transparent",
+                                borderRadius: "3px",
+                                padding: "2px",
+                                cursor: "pointer",
+                                minWidth: "24px",
+                                width: "24px",
+                                height: "24px",
+                                fontSize: "10px"
+                              }
+                            }}
+                          />
+                        </div>
+                      </div>
+
+                      {/* Individual Response */}
+                      {pair.responseBody && (
+                        <div>
+                          <div style={{
+                            fontSize: "12px",
+                            fontWeight: "bold",
+                            color: "#333",
+                            marginBottom: "6px"
+                          }}>
+                            Response (Status: {pair.response.status})
+                          </div>
+                          <div style={{ position: "relative" }}>
+                            <SyntaxHighlighter
+                              language="json"
+                              style={atomOneDark}
+                              wrapLongLines={true}
+                              customStyle={{
+                                borderRadius: "6px",
+                                padding: "8px",
+                                paddingRight: "40px",
+                                fontSize: "12px"
+                              }}
+                            >
+                              {pair.responseBody}
+                            </SyntaxHighlighter>
+                            <IconButton
+                              iconProps={{ iconName: "Copy" }}
+                              title="Copy response to clipboard"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                copyToClipboard(pair.responseBody);
+                              }}
+                              onMouseEnter={() => setHoveredButton(`batch-resp-${index}`)}
+                              onMouseLeave={() => setHoveredButton(null)}
+                              styles={{
+                                root: {
+                                  position: "absolute",
+                                  top: "6px",
+                                  right: "6px",
+                                  backgroundColor: hoveredButton === `batch-resp-${index}`
+                                    ? "rgba(255, 255, 255, 0.25)"
+                                    : "rgba(255, 255, 255, 0.1)",
+                                  color: "#fff",
+                                  border: "1px solid transparent",
+                                  borderRadius: "3px",
+                                  padding: "2px",
+                                  cursor: "pointer",
+                                  minWidth: "24px",
+                                  width: "24px",
+                                  height: "24px",
+                                  fontSize: "10px"
+                                }
+                              }}
+                            />
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                // Normal request/response handling
+                <div>
+                  {request.requestBody && request.requestBody.length > 0 && (
+                    <div style={{ marginBottom: request.responseContent && request.responseContent.length > 0 ? "15px" : "0" }}>
+                      <div style={{
+                        fontSize: "14px",
+                        fontWeight: "bold",
+                        color: "#333",
+                        marginBottom: "8px"
+                      }}>
+                        Request
+                      </div>
+                      <div style={{ position: "relative" }}>
+                        <SyntaxHighlighter
+                          language="json"
+                          style={atomOneDark}
+                          wrapLongLines={true}
+                          customStyle={{
+                            borderRadius: "8px",
+                            padding: "12px",
+                            paddingRight: "50px"
+                          }}
+                        >
+                          {formatJsonContent(request.requestBody)}
+                        </SyntaxHighlighter>
+                        <IconButton
+                          iconProps={{ iconName: "Copy" }}
+                          title="Copy request body to clipboard"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            copyToClipboard(request.requestBody);
+                          }}
+                          onMouseEnter={() => setHoveredButton('body-copy')}
+                          onMouseLeave={() => setHoveredButton(null)}
+                          styles={{
+                            root: {
+                              position: "absolute",
+                              top: "8px",
+                              right: "8px",
+                              backgroundColor: hoveredButton === 'body-copy'
+                                ? "rgba(255, 255, 255, 0.25)"
+                                : "rgba(255, 255, 255, 0.1)",
+                              color: "#fff",
+                              border: hoveredButton === 'body-copy'
+                                ? "1px solid rgba(255, 255, 255, 0.4)"
+                                : "1px solid transparent",
+                              borderRadius: "4px",
+                              padding: "4px",
+                              cursor: "pointer",
+                              minWidth: "32px",
+                              width: "32px",
+                              height: "32px",
+                              transition: "all 0.2s ease",
+                              boxShadow: hoveredButton === 'body-copy'
+                                ? "0 2px 6px rgba(0, 0, 0, 0.2)"
+                                : "none"
+                            }
+                          }}
+                        />
+                      </div>
+                    </div>
+                  )}
+                  {request.responseContent && request.responseContent.length > 0 && (
+                    <div>
+                      <div style={{
+                        fontSize: "14px",
+                        fontWeight: "bold",
+                        color: "#333",
+                        marginBottom: "8px"
+                      }}>
+                        Response
+                      </div>
+                      <div style={{ position: "relative" }}>
+                        <SyntaxHighlighter
+                          language="json"
+                          style={atomOneDark}
+                          wrapLongLines={true}
+                          customStyle={{
+                            borderRadius: "8px",
+                            padding: "12px",
+                            paddingRight: "50px"
+                          }}
+                        >
+                          {formatJsonContent(request.responseContent)}
+                        </SyntaxHighlighter>
+                        <IconButton
+                          iconProps={{ iconName: "Copy" }}
+                          title="Copy response to clipboard"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            copyToClipboard(request.responseContent);
+                          }}
+                          onMouseEnter={() => setHoveredButton('response-copy')}
+                          onMouseLeave={() => setHoveredButton(null)}
+                          styles={{
+                            root: {
+                              position: "absolute",
+                              top: "8px",
+                              right: "8px",
+                              backgroundColor: hoveredButton === 'response-copy'
+                                ? "rgba(255, 255, 255, 0.25)"
+                                : "rgba(255, 255, 255, 0.1)",
+                              color: "#fff",
+                              border: hoveredButton === 'response-copy'
+                                ? "1px solid rgba(255, 255, 255, 0.4)"
+                                : "1px solid transparent",
+                              borderRadius: "4px",
+                              padding: "4px",
+                              cursor: "pointer",
+                              minWidth: "32px",
+                              width: "32px",
+                              height: "32px",
+                              transition: "all 0.2s ease",
+                              boxShadow: hoveredButton === 'response-copy'
+                                ? "0 2px 6px rgba(0, 0, 0, 0.2)"
+                                : "none"
+                            }
+                          }}
+                        />
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -288,7 +527,7 @@ export const CodeView = ({ request, lightUrl, snippetLanguage }) => {
             customStyle={{
               borderRadius: "8px",
               padding: "12px",
-              paddingRight: "50px" // Make room for copy button
+              paddingRight: "50px"
             }}
           >
             {request.code}
@@ -328,6 +567,83 @@ export const CodeView = ({ request, lightUrl, snippetLanguage }) => {
               }
             }}
           />
+        </div>
+      )}
+
+      {/* Batch code snippets - show individual code blocks for each request in the batch */}
+      {request.batchCodeSnippets && request.batchCodeSnippets.length > 0 && (
+        <div style={{ marginTop: "15px" }}>
+          <div style={{
+            fontSize: "16px",
+            fontWeight: "bold",
+            color: "#333",
+            marginBottom: "16px"
+          }}>
+            Individual Request Code Snippets
+          </div>
+          {request.batchCodeSnippets.map((snippet, index) => (
+            <div key={snippet.id} style={{
+              marginBottom: index < request.batchCodeSnippets.length - 1 ? "20px" : "0"
+            }}>
+              <div style={{
+                fontSize: "14px",
+                fontWeight: "bold",
+                color: "#666",
+                marginBottom: "8px"
+              }}>
+                Request ID: {snippet.id} - {snippet.method} {snippet.url}
+              </div>
+              <div style={{ position: "relative" }}>
+                <SyntaxHighlighter
+                  language={syntaxLanguage}
+                  style={atomOneDark}
+                  wrapLongLines={true}
+                  customStyle={{
+                    borderRadius: "8px",
+                    padding: "12px",
+                    paddingRight: "50px"
+                  }}
+                >
+                  {snippet.code}
+                </SyntaxHighlighter>
+                <IconButton
+                  iconProps={{ iconName: "Copy" }}
+                  title="Copy individual code to clipboard"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    copyToClipboard(snippet.code);
+                  }}
+                  onMouseEnter={() => setHoveredButton(`batch-code-${index}`)}
+                  onMouseLeave={() => setHoveredButton(null)}
+                  styles={{
+                    root: {
+                      position: "absolute",
+                      top: "8px",
+                      right: "8px",
+                      backgroundColor: hoveredButton === `batch-code-${index}`
+                        ? "rgba(255, 255, 255, 0.25)"
+                        : "rgba(255, 255, 255, 0.1)",
+                      color: "#fff",
+                      border: hoveredButton === `batch-code-${index}`
+                        ? "1px solid rgba(255, 255, 255, 0.4)"
+                        : "1px solid transparent",
+                      borderRadius: "4px",
+                      padding: "4px",
+                      cursor: "pointer",
+                      minWidth: "32px",
+                      width: "32px",
+                      height: "32px",
+                      transition: "all 0.2s ease",
+                      boxShadow: hoveredButton === `batch-code-${index}`
+                        ? "0 2px 6px rgba(0, 0, 0, 0.2)"
+                        : "none"
+                    }
+                  }}
+                />
+              </div>
+            </div>
+          ))}
         </div>
       )}
     </div>
