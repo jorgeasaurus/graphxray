@@ -30,7 +30,7 @@ const getPowershellCmd = async function (snippetLanguage, method, url, body) {
     devxSnippetUri = devxEndPoint;
   } else if (["javascript", "java", "objective-c"].includes(snippetLanguage)) {
     devxSnippetUri = devxEndPoint + snippetParam;
-  } else if (["go", "powershell"].includes(snippetLanguage)) {
+  } else if (["go", "powershell", "python"].includes(snippetLanguage)) {
     devxSnippetUri = devxEndPoint + snippetParam + openApiParam;
   }
 

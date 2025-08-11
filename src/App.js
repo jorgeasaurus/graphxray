@@ -139,7 +139,7 @@ class App extends React.Component {
 
     var useLocalDoc = true;
     var docRoot =
-      "https://raw.githubusercontent.com/dhruvchand/SaveAsScriptHackathon/main/src/public/doc/";
+      "https://github.com/merill/graphxray";
     if (useLocalDoc) {
       docRoot = "./doc/";
     }

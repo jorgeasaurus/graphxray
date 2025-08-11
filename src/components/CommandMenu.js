@@ -58,7 +58,7 @@ const _overflowItems = [
     key: "feedback",
     text: "Feedback",
     onClick: () =>
-      window.open("https://github.com/dhruvchand/SaveAsScriptHackathon/issues"),
+      window.open("https://github.com/merill/graphxray/issues"),
     iconProps: { iconName: "Feedback" },
   },
 ];

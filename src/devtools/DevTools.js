@@ -21,11 +21,12 @@ const dropdownStyles = {
 
 const options = [
   { key: "powershell", text: "PowerShell", fileExt: "ps1" },
+  { key: "python", text: "Python", fileExt: "py" },
   { key: "c#", text: "C#", fileExt: "cs" },
   { key: "javascript", text: "JavaScript", fileExt: "js" },
   { key: "java", text: "Java", fileExt: "java" },
   { key: "objective-c", text: "Objective-C", fileExt: "c" },
-  { key: "go", text: "Go", fileExt: "go" },
+  { key: "go", text: "Go", fileExt: "go" },  
 ];
 
 class DevTools extends React.Component {
