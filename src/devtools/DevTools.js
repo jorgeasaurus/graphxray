@@ -6,6 +6,9 @@ import { FontSizes } from "@fluentui/theme";
 import { PrimaryButton, DefaultPalette, getTheme } from "@fluentui/react";
 import { getCodeView } from "../common/client.js";
 import { Dropdown } from "@fluentui/react/lib/Dropdown";
+import { Toggle } from "@fluentui/react/lib/Toggle";
+import { IconButton } from "@fluentui/react/lib/Button";
+import { TooltipHost } from "@fluentui/react/lib/Tooltip";
 import DevToolsCommandBar from "../components/DevToolsCommandBar";
 import { initializeIcons } from "@fluentui/font-icons-mdl2";
 import { Layer, LayerHost } from "@fluentui/react/lib/Layer";
@@ -34,9 +37,14 @@ const options = [
 class DevTools extends React.Component {
   constructor() {
     super();
+    // Load ultraXRayMode from localStorage, default to false
+    const savedUltraXRayMode = localStorage.getItem('graphxray-ultraXRayMode');
+    const ultraXRayMode = savedUltraXRayMode ? JSON.parse(savedUltraXRayMode) : false;
+    
     this.state = {
       stack: [],
       snippetLanguage: "powershell",
+      ultraXRayMode: ultraXRayMode,
     };
   }
 
@@ -127,7 +135,7 @@ class DevTools extends React.Component {
             harEntry.request.url.includes("https://graph.microsoft.us") ||
             harEntry.request.url.includes("https://dod-graph.microsoft.us") ||
             harEntry.request.url.includes("https://microsoftgraph.chinacloudapi.cn") || 
-            harEntry.request.url.includes("https://main.iam.ad.ext.azure.com"))
+            (harEntry.request.url.includes("https://main.iam.ad.ext.azure.com") && this.state.ultraXRayMode))
         ) {
           const request = harEntry.request;
 
@@ -160,6 +168,13 @@ class DevTools extends React.Component {
   onLanguageChange = (e, option) => {
     this.setState({ snippetLanguage: option.key });
     this.clearStack();
+  };
+
+  onUltraXRayToggle = (e, checked) => {
+    this.setState({ ultraXRayMode: checked });
+    // Save to localStorage
+    localStorage.setItem('graphxray-ultraXRayMode', JSON.stringify(checked));
+    this.clearStack(); // Clear the stack when toggling mode
   };
   render() {
     return (
@@ -194,14 +209,68 @@ class DevTools extends React.Component {
               Intune Entra blades that use Graph API (E.g. Users, Groups,
               Enterprise Applications, Administrative Units, etc).
             </p>
-            <Dropdown
-              placeholder="Select an option"
-              label="Select language"
-              options={options}
-              styles={dropdownStyles}
-              defaultSelectedKey={this.state.snippetLanguage}
-              onChange={this.onLanguageChange}
-            />
+            <div style={{ 
+              display: "flex", 
+              alignItems: "flex-end", 
+              gap: "20px",
+              flexWrap: "wrap" 
+            }}>
+              <Dropdown
+                placeholder="Select an option"
+                label="Select language"
+                options={options}
+                styles={dropdownStyles}
+                defaultSelectedKey={this.state.snippetLanguage}
+                onChange={this.onLanguageChange}
+              />
+              
+              <div style={{ 
+                display: "flex", 
+                alignItems: "center",
+                gap: "8px",
+                marginBottom: "8px" // Align with dropdown bottom margin
+              }}>
+                <Toggle
+                  label="Ultra X-Ray"
+                  checked={this.state.ultraXRayMode}
+                  onChange={this.onUltraXRayToggle}
+                  onText="On"
+                  offText="Off"
+                  styles={{
+                    root: { marginBottom: 0 },
+                    label: { fontWeight: "600" }
+                  }}
+                />
+                <TooltipHost
+                  content="Enables ultra mode which allows you to see API calls that are not publicly documented by Microsoft. These are meant for educational purposes. These endpoints should not be used in custom scripts as they are not supported by Microsoft and are only meant for internal use."
+                  styles={{
+                    root: {
+                      display: "inline-block"
+                    }
+                  }}
+                >
+                  <IconButton
+                    iconProps={{ iconName: "Info" }}
+                    title="Ultra X-Ray Information"
+                    styles={{
+                      root: {
+                        minWidth: "24px",
+                        width: "24px",
+                        height: "24px",
+                        color: "#666",
+                        backgroundColor: "transparent",
+                        border: "1px solid #ccc",
+                        borderRadius: "50%"
+                      },
+                      rootHovered: {
+                        backgroundColor: "rgba(0, 0, 0, 0.05)",
+                        color: "#333"
+                      }
+                    }}
+                  />
+                </TooltipHost>
+              </div>
+            </div>
           </div>
           {this.state.stack && this.state.stack.length > 0 && (
             <div
