@@ -79,11 +79,80 @@ const getPowershellCmd = async function (snippetLanguage, method, url, body) {
   }
 };
 
-const getRequestBody = function (request) {
+const getRequestBody = async function (request) {
   let requestBody = "";
+  
+  console.log("getRequestBody - request object:", request);
+  
+  // First, check if the request object directly has a body property (seems to be the case!)
+  if (request.body) {
+    if (typeof request.body === 'string') {
+      requestBody = request.body;
+    } else {
+      requestBody = JSON.stringify(request.body);
+    }
+    console.log("getRequestBody - found body in request.body:", requestBody);
+    return requestBody;
+  }
+  
+  // Second, try to get from the standard devtools API (limited access)
   if (request.postData && request.postData.text) {
     requestBody = request.postData.text;
+    console.log("getRequestBody - found body in postData:", requestBody);
+    return requestBody;
   }
+  
+  // Try using getContent() method if available (for DevTools Network requests)
+  if (!requestBody && request._harEntry && typeof request._harEntry.getContent === 'function') {
+    console.log("getRequestBody - trying getContent() method on harEntry");
+    try {
+      const content = await new Promise((resolve) => {
+        request._harEntry.getContent((content, encoding) => {
+          console.log("getRequestBody - getContent returned:", content, encoding);
+          resolve(content);
+        });
+      });
+      if (content) {
+        requestBody = content;
+        console.log("getRequestBody - found body from getContent:", requestBody);
+        return requestBody;
+      }
+    } catch (error) {
+      console.log("getRequestBody - getContent failed:", error);
+    }
+  }
+  
+  // If no body found, try to get from background script using URL
+  if (!requestBody && request.url) {
+    console.log("getRequestBody - trying background script with URL:", request.url);
+    try {
+      // Try both the path and common full URL variations
+      const urlsToTry = [
+        request.url,
+        `https://graph.microsoft.com/v1.0${request.url}`,
+        `https://graph.microsoft.com/beta${request.url}`,
+        `https://graph.microsoft.us/v1.0${request.url}`,
+        `https://graph.microsoft.us/beta${request.url}`
+      ];
+      
+      for (const url of urlsToTry) {
+        const response = await chrome.runtime.sendMessage({
+          type: "GET_REQUEST_BODY",
+          url: url
+        });
+        console.log("getRequestBody - background script response for", url, ":", response);
+        if (response && response.body) {
+          requestBody = response.body;
+          console.log("getRequestBody - found body from background script:", requestBody);
+          return requestBody;
+        }
+      }
+    } catch (error) {
+      console.log("Could not get request body from background script:", error);
+    }
+  }
+  
+  console.log("getRequestBody - final result:", requestBody);
   return requestBody;
 };
 
@@ -92,7 +161,7 @@ const getCodeView = async function (snippetLanguage, request, version) {
     return null;
   }
   console.log("GetCodeView", snippetLanguage, request);
-  const requestBody = getRequestBody(request);
+  const requestBody = await getRequestBody(request);
   const code = await getPowershellCmd(
     snippetLanguage,
     request.method,
@@ -101,6 +170,7 @@ const getCodeView = async function (snippetLanguage, request, version) {
   );
   const codeView = {
     displayRequestUrl: request.method + " " + request.url,
+    requestBody: requestBody,
     code: code,
   };
   console.log("CodeView", codeView);

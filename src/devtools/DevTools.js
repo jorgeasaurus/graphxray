@@ -96,11 +96,13 @@ class DevTools extends React.Component {
   }
 
   async addRequestToStack(request, version) {
+    console.log("DevTools - addRequestToStack called with:", request, version);
     const codeView = await getCodeView(
       this.state.snippetLanguage,
       request,
       version
     );
+    console.log("DevTools - getCodeView returned:", codeView);
     if (codeView) {
       this.setState({ stack: [...this.state.stack, codeView] });
     }
@@ -109,7 +111,7 @@ class DevTools extends React.Component {
   async getBatchRequests(request, requestBody) {
     const version = request.url.split("/$batch")[0];
     let requests = JSON.parse(requestBody)?.requests;
-    let calls = await Promise.all(
+    await Promise.all(
       requests.map(async (request) => {
         await this.addRequestToStack(request, version);
       })
@@ -120,19 +122,22 @@ class DevTools extends React.Component {
     if (!chrome.devtools) {
       return;
     }
-    chrome.devtools.network.onRequestFinished.addListener(async (request) => {
+    chrome.devtools.network.onRequestFinished.addListener(async (harEntry) => {
       try {
         if (
-          request.request &&
-          request.request.url &&
-          (request.request.url.includes("https://graph.microsoft.com") ||
-            request.request.url.includes("https://graph.microsoft.us") ||
-            request.request.url.includes("https://dod-graph.microsoft.us") ||
-            request.request.url.includes(
+          harEntry.request &&
+          harEntry.request.url &&
+          (harEntry.request.url.includes("https://graph.microsoft.com") ||
+            harEntry.request.url.includes("https://graph.microsoft.us") ||
+            harEntry.request.url.includes("https://dod-graph.microsoft.us") ||
+            harEntry.request.url.includes(
               "https://microsoftgraph.chinacloudapi.cn"
             ))
         ) {
-          request = request.request;
+          const request = harEntry.request;
+          
+          // Pass both the request and the harEntry (which has getContent method)
+          request._harEntry = harEntry;
 
           try {
             this.showRequest(request);
@@ -147,9 +152,12 @@ class DevTools extends React.Component {
   }
 
   async showRequest(request) {
-    let requestBody = getRequestBody(request);
-    if (request.url.includes("/$batch") && requestBody) {
-      await this.getBatchRequests(request, requestBody);
+    console.log("DevTools - showRequest called with:", request);
+    if (request.url.includes("/$batch")) {
+      const requestBody = await getRequestBody(request);
+      if (requestBody) {
+        await this.getBatchRequests(request, requestBody);
+      }
     } else {
       await this.addRequestToStack(request, "");
     }
@@ -188,9 +196,9 @@ class DevTools extends React.Component {
             <h2>Graph Call Stack Trace</h2>
             <p>
               Displays the Graph API calls that are being made by the current
-              browser tab. This functionality is available on Entra ID blades
-              that use Graph API (E.g. Users, Groups, Enterprise Applications,
-              Administrative Units, etc).
+              browser tab. This functionality is available on most portals like
+              Intune Entra blades that use Graph API (E.g. Users, Groups, 
+              Enterprise Applications, Administrative Units, etc).
             </p>
             <Dropdown
               placeholder="Select an option"

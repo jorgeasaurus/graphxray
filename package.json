@@ -92,10 +92,7 @@
     ],
     "plugins": [
       "prettier"
-    ],
-    "rules": {
-      "prettier/prettier": "error"
-    }
+    ]
   },
   "browserslist": {
     "production": [
