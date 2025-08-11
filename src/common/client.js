@@ -83,6 +83,8 @@ const getRequestBody = async function (request) {
   let requestBody = "";
   
   console.log("getRequestBody - request object:", request);
+  console.log("getRequestBody - request.method:", request.method);
+  console.log("getRequestBody - request.url:", request.url);
   
   // First, check if the request object directly has a body property (seems to be the case!)
   if (request.body) {
@@ -103,8 +105,9 @@ const getRequestBody = async function (request) {
   }
   
   // Try using getContent() method if available (for DevTools Network requests)
+  // IMPORTANT: This should only get REQUEST content, not response content
   if (!requestBody && request._harEntry && typeof request._harEntry.getContent === 'function') {
-    console.log("getRequestBody - trying getContent() method on harEntry");
+    console.log("getRequestBody - trying getContent() method on harEntry for REQUEST body");
     try {
       const content = await new Promise((resolve) => {
         request._harEntry.getContent((content, encoding) => {
@@ -112,10 +115,14 @@ const getRequestBody = async function (request) {
           resolve(content);
         });
       });
-      if (content) {
+      
+      // Only use this if it's actually request content (POST/PUT/PATCH methods typically have bodies)
+      if (content && ['POST', 'PUT', 'PATCH'].includes(request.method.toUpperCase())) {
         requestBody = content;
-        console.log("getRequestBody - found body from getContent:", requestBody);
+        console.log("getRequestBody - found REQUEST body from getContent:", requestBody);
         return requestBody;
+      } else {
+        console.log("getRequestBody - ignoring getContent result for GET/DELETE request or empty content");
       }
     } catch (error) {
       console.log("getRequestBody - getContent failed:", error);
@@ -152,7 +159,7 @@ const getRequestBody = async function (request) {
     }
   }
   
-  console.log("getRequestBody - final result:", requestBody);
+  console.log("getRequestBody - final result (should only be REQUEST body):", requestBody);
   return requestBody;
 };
 
@@ -164,31 +171,53 @@ const getResponseContent = async function (harEntry) {
   // Try to get response content from harEntry
   if (harEntry && harEntry.response) {
     console.log("getResponseContent - response object:", harEntry.response);
+    console.log("getResponseContent - response status:", harEntry.response.status);
+    console.log("getResponseContent - response headers:", harEntry.response.headers);
+    console.log("getResponseContent - response content object:", harEntry.response.content);
     
-    // Check if response has content directly
+    // Check if response has content directly in the content.text property
     if (harEntry.response.content && harEntry.response.content.text) {
       responseContent = harEntry.response.content.text;
       console.log("getResponseContent - found content in response.content.text:", responseContent);
       return responseContent;
     }
     
-    // Try using getContent() method if available
-    if (typeof harEntry.getContent === 'function') {
-      console.log("getResponseContent - trying getContent() method");
+    // Try using getResponseBody() method if available (this is different from getContent)
+    if (typeof harEntry.getResponseBody === 'function') {
+      console.log("getResponseContent - trying getResponseBody() method");
       try {
         const content = await new Promise((resolve) => {
-          harEntry.getContent((content, encoding) => {
-            console.log("getResponseContent - getContent returned:", content, encoding);
+          harEntry.getResponseBody((content, encoding) => {
+            console.log("getResponseContent - getResponseBody returned:", content, encoding);
             resolve(content);
           });
         });
         if (content) {
           responseContent = content;
-          console.log("getResponseContent - found content from getContent:", responseContent);
+          console.log("getResponseContent - found content from getResponseBody:", responseContent);
           return responseContent;
         }
       } catch (error) {
-        console.log("getResponseContent - getContent failed:", error);
+        console.log("getResponseContent - getResponseBody failed:", error);
+      }
+    }
+    
+    // If the above methods don't work, try to access response content through different paths
+    // Sometimes the response content is base64 encoded
+    if (harEntry.response.content) {
+      const content = harEntry.response.content;
+      if (content.text !== undefined) {
+        responseContent = content.text;
+        // If it's base64 encoded, decode it
+        if (content.encoding === 'base64') {
+          try {
+            responseContent = atob(content.text);
+          } catch (e) {
+            console.log("Failed to decode base64 content:", e);
+          }
+        }
+        console.log("getResponseContent - found content with encoding handling:", responseContent);
+        return responseContent;
       }
     }
   }
