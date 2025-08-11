@@ -4,6 +4,10 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { loadTheme } from "@fluentui/react";
+import { initializeIcons } from "@fluentui/font-icons-mdl2";
+
+// Initialize Fluent UI icons once for this entry point
+initializeIcons();
 
 ReactDOM.render(
   <React.StrictMode>

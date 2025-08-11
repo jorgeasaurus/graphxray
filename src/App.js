@@ -16,10 +16,8 @@ import urlDocMap from "./doc/map.json";
 import { getActiveTab } from "./common/tabs";
 import { findMatchingUrlTemplate } from "./common/helpers";
 import { openOptionsPage } from "./components/CommandMenu.js";
-import { initializeIcons } from "@fluentui/font-icons-mdl2";
 
 const theme = getTheme();
-initializeIcons();
 
 class App extends React.Component {
   constructor() {

@@ -3,10 +3,8 @@ import "./Options.css";
 import { AppHeader } from "../components/AppHeader";
 import { FontSizes } from "@fluentui/theme";
 import { PrimaryButton, DefaultPalette, getTheme } from "@fluentui/react";
-import { initializeIcons } from "@fluentui/font-icons-mdl2";
 
 const theme = getTheme();
-initializeIcons();
 class Options extends React.Component {
   constructor() {
     super();

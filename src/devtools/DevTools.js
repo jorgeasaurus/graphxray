@@ -11,16 +11,9 @@ import { Toggle } from "@fluentui/react/lib/Toggle";
 import { IconButton } from "@fluentui/react/lib/Button";
 import { TooltipHost } from "@fluentui/react/lib/Tooltip";
 import DevToolsCommandBar from "../components/DevToolsCommandBar";
-import { initializeIcons } from "@fluentui/font-icons-mdl2";
 import { Layer, LayerHost } from "@fluentui/react/lib/Layer";
 
 const theme = getTheme();
-
-// Initialize icons only once globally
-if (!window._fluentIconsInitialized) {
-  initializeIcons();
-  window._fluentIconsInitialized = true;
-}
 
 const dropdownStyles = {
   dropdown: { width: 300 },
