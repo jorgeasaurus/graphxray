@@ -17,6 +17,28 @@ export const CodeView = ({ request, lightUrl, snippetLanguage }) => {
 
   let syntaxLanguage = snippetLanguage;
 
+  // Function to format JSON content
+  const formatJsonContent = (content) => {
+    if (!content || typeof content !== 'string') {
+      return content;
+    }
+    
+    try {
+      // Clean up the content first - remove extra whitespace and newlines
+      const cleanContent = content.trim();
+      console.log("Formatting JSON content:", cleanContent.substring(0, 100) + "...");
+      
+      // Try to parse as JSON
+      const parsed = JSON.parse(cleanContent);
+      const formatted = JSON.stringify(parsed, null, 2);
+      console.log("Successfully formatted JSON");
+      return formatted;
+    } catch (e) {
+      console.log("Not valid JSON, returning original content:", e.message);
+      return content;
+    }
+  };
+
   const copyToClipboard = async (text) => {
     try {
       await navigator.clipboard.writeText(text);
@@ -151,7 +173,7 @@ export const CodeView = ({ request, lightUrl, snippetLanguage }) => {
                         paddingRight: "50px" // Make room for copy button
                       }}
                     >
-                      {request.requestBody}
+                      {formatJsonContent(request.requestBody)}
                     </SyntaxHighlighter>
                     <IconButton
                       iconProps={{ iconName: "Copy" }}
@@ -212,7 +234,7 @@ export const CodeView = ({ request, lightUrl, snippetLanguage }) => {
                         paddingRight: "50px" // Make room for copy button
                       }}
                     >
-                      {request.responseContent}
+                      {formatJsonContent(request.responseContent)}
                     </SyntaxHighlighter>
                     <IconButton
                       iconProps={{ iconName: "Copy" }}
