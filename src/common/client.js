@@ -50,14 +50,14 @@ const getPowershellCmd = async function (snippetLanguage, method, url, body) {
     } else {
       const errorText = await response.text();
       const errorMsg = `DevXError: ${response.status} ${response.statusText} for ${method} ${url} - Response: ${errorText}`;
-      console.warn(errorMsg);
+      console.log(errorMsg);
       return null;
     }
   } catch (error) {
     const errorMsg = `DevXError: Network/Request error for ${method} ${url} - ${
       error.message || error
     }`;
-    console.warn(errorMsg, error);
+    console.log(errorMsg, error);
   }
 };
 

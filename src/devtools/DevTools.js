@@ -142,11 +142,11 @@ class DevTools extends React.Component {
           try {
             this.showRequest(request, harEntry);
           } catch (error) {
-            console.error(error);
+            console.log(error);
           }
         }
       } catch (error) {
-        console.error(error);
+        console.log(error);
       }
     });
   }

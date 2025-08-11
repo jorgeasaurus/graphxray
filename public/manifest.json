@@ -26,12 +26,12 @@
     "https://dod-graph.microsoft.us/",
     "https://main.iam.ad.ext.azure.com/",
     "https://elm.iga.azure.com/",
-    "https://pds.iga.azure.com",
-    "https://api.accessreviews.identitygovernance.azure.com",
-    "https://management.azure.com",
-    "https://admin.microsoft.com",
-    "https://portal.office.com",
-    "https://security.microsoft.com"
+    "https://pds.iga.azure.com/",
+    "https://api.accessreviews.identitygovernance.azure.com/",
+    "https://management.azure.com/",
+    "https://admin.microsoft.com/",
+    "https://portal.office.com/",
+    "https://security.microsoft.com/"
   ],
   "icons": {
     "16": "img/icon-16.png",
