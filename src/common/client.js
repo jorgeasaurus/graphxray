@@ -1,30 +1,7 @@
+import { parseGraphUrl, GRAPH_DOMAINS } from "./domains.js";
+
 const devxEndPoint =
   "https://devxapi-func-prod-eastus.azurewebsites.net/api/graphexplorersnippets";
-
-const parseGraphUrl = function (url) {
-  let path = url;
-  let host = "graph.microsoft.com";
-
-  // Handle all known Graph API endpoints
-  if (url.includes("https://graph.microsoft.com")) {
-    path = url.split("/graph.microsoft.com")[1];
-    host = "graph.microsoft.com";
-  } else if (url.includes("https://graph.microsoft.us")) {
-    path = url.split("/graph.microsoft.us")[1];
-    host = "graph.microsoft.us";
-  } else if (url.includes("https://dod-graph.microsoft.us")) {
-    path = url.split("/dod-graph.microsoft.us")[1];
-    host = "dod-graph.microsoft.us";
-  } else if (url.includes("https://microsoftgraph.chinacloudapi.cn")) {
-    path = url.split("/microsoftgraph.chinacloudapi.cn")[1];
-    host = "microsoftgraph.chinacloudapi.cn";
-  } else if (url.includes("https://main.iam.ad.ext.azure.com")) {
-    path = url.split("/main.iam.ad.ext.azure.com")[1];
-    host = "main.iam.ad.ext.azure.com";
-  }
-
-  return { path, host };
-};
 
 const getPowershellCmd = async function (snippetLanguage, method, url, body) {
   console.log("Get code snippet from DevX:", url, method);
@@ -131,14 +108,14 @@ const getRequestBody = async function (request) {
   if (!requestBody && request.url) {
     console.log("getRequestBody - trying background script with URL:", request.url);
     try {
-      // Try both the path and common full URL variations
-      const urlsToTry = [
-        request.url,
-        `https://graph.microsoft.com/v1.0${request.url}`,
-        `https://graph.microsoft.com/beta${request.url}`,
-        `https://graph.microsoft.us/v1.0${request.url}`,
-        `https://graph.microsoft.us/beta${request.url}`
-      ];
+      // Generate URLs to try based on standard Graph domains
+      const urlsToTry = [request.url];
+      
+      // Add variations for standard Graph endpoints
+      GRAPH_DOMAINS.STANDARD.forEach(domain => {
+        urlsToTry.push(`${domain}/v1.0${request.url}`);
+        urlsToTry.push(`${domain}/beta${request.url}`);
+      });
       
       for (const url of urlsToTry) {
         const response = await chrome.runtime.sendMessage({

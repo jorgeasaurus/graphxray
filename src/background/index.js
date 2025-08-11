@@ -1,6 +1,7 @@
 import {
   saveObjectInLocalStorage,
 } from "../common/storage.js";
+import { getAllDomainUrls } from "../common/domains.js";
 
 // This needs to be an export due to typescript implementation limitation of needing '--isolatedModules' tsconfig
 export async function init() {
@@ -70,13 +71,7 @@ export async function init() {
       }
     },
     {
-      urls: [
-        "https://graph.microsoft.com/*",
-        "https://graph.microsoft.us/*",
-        "https://dod-graph.microsoft.us/*",
-        "https://microsoftgraph.chinacloudapi.cn/*",
-        "https://main.iam.ad.ext.azure.com/*"
-      ]
+      urls: getAllDomainUrls()
     },
     ["requestBody"]
   );

@@ -5,6 +5,7 @@ import { AppHeader } from "../components/AppHeader";
 import { FontSizes } from "@fluentui/theme";
 import { PrimaryButton, DefaultPalette, getTheme } from "@fluentui/react";
 import { getCodeView } from "../common/client.js";
+import { isAllowedDomain } from "../common/domains.js";
 import { Dropdown } from "@fluentui/react/lib/Dropdown";
 import { Toggle } from "@fluentui/react/lib/Toggle";
 import { IconButton } from "@fluentui/react/lib/Button";
@@ -131,11 +132,7 @@ class DevTools extends React.Component {
         if (
           harEntry.request &&
           harEntry.request.url &&
-          (harEntry.request.url.includes("https://graph.microsoft.com") ||
-            harEntry.request.url.includes("https://graph.microsoft.us") ||
-            harEntry.request.url.includes("https://dod-graph.microsoft.us") ||
-            harEntry.request.url.includes("https://microsoftgraph.chinacloudapi.cn") || 
-            (harEntry.request.url.includes("https://main.iam.ad.ext.azure.com") && this.state.ultraXRayMode))
+          isAllowedDomain(harEntry.request.url, this.state.ultraXRayMode)
         ) {
           const request = harEntry.request;
 
