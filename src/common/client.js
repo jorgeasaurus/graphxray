@@ -156,12 +156,54 @@ const getRequestBody = async function (request) {
   return requestBody;
 };
 
-const getCodeView = async function (snippetLanguage, request, version) {
+const getResponseContent = async function (harEntry) {
+  let responseContent = "";
+  
+  console.log("getResponseContent - harEntry:", harEntry);
+  
+  // Try to get response content from harEntry
+  if (harEntry && harEntry.response) {
+    console.log("getResponseContent - response object:", harEntry.response);
+    
+    // Check if response has content directly
+    if (harEntry.response.content && harEntry.response.content.text) {
+      responseContent = harEntry.response.content.text;
+      console.log("getResponseContent - found content in response.content.text:", responseContent);
+      return responseContent;
+    }
+    
+    // Try using getContent() method if available
+    if (typeof harEntry.getContent === 'function') {
+      console.log("getResponseContent - trying getContent() method");
+      try {
+        const content = await new Promise((resolve) => {
+          harEntry.getContent((content, encoding) => {
+            console.log("getResponseContent - getContent returned:", content, encoding);
+            resolve(content);
+          });
+        });
+        if (content) {
+          responseContent = content;
+          console.log("getResponseContent - found content from getContent:", responseContent);
+          return responseContent;
+        }
+      } catch (error) {
+        console.log("getResponseContent - getContent failed:", error);
+      }
+    }
+  }
+  
+  console.log("getResponseContent - final result:", responseContent);
+  return responseContent;
+};
+
+const getCodeView = async function (snippetLanguage, request, version, harEntry = null) {
   if (["OPTIONS"].includes(request.method)) {
     return null;
   }
-  console.log("GetCodeView", snippetLanguage, request);
+  console.log("GetCodeView", snippetLanguage, request, harEntry);
   const requestBody = await getRequestBody(request);
+  const responseContent = harEntry ? await getResponseContent(harEntry) : "";
   const code = await getPowershellCmd(
     snippetLanguage,
     request.method,
@@ -171,9 +213,10 @@ const getCodeView = async function (snippetLanguage, request, version) {
   const codeView = {
     displayRequestUrl: request.method + " " + request.url,
     requestBody: requestBody,
+    responseContent: responseContent,
     code: code,
   };
   console.log("CodeView", codeView);
   return codeView;
 };
-export { getPowershellCmd, getRequestBody, getCodeView };
+export { getPowershellCmd, getRequestBody, getResponseContent, getCodeView };

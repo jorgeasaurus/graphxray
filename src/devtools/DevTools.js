@@ -95,12 +95,13 @@ class DevTools extends React.Component {
     });
   }
 
-  async addRequestToStack(request, version) {
-    console.log("DevTools - addRequestToStack called with:", request, version);
+  async addRequestToStack(request, version, harEntry = null) {
+    console.log("DevTools - addRequestToStack called with:", request, version, harEntry);
     const codeView = await getCodeView(
       this.state.snippetLanguage,
       request,
-      version
+      version,
+      harEntry
     );
     console.log("DevTools - getCodeView returned:", codeView);
     if (codeView) {
@@ -140,7 +141,7 @@ class DevTools extends React.Component {
           request._harEntry = harEntry;
 
           try {
-            this.showRequest(request);
+            this.showRequest(request, harEntry);
           } catch (error) {
             console.error(error);
           }
@@ -151,15 +152,15 @@ class DevTools extends React.Component {
     });
   }
 
-  async showRequest(request) {
-    console.log("DevTools - showRequest called with:", request);
+  async showRequest(request, harEntry = null) {
+    console.log("DevTools - showRequest called with:", request, harEntry);
     if (request.url.includes("/$batch")) {
       const requestBody = await getRequestBody(request);
       if (requestBody) {
         await this.getBatchRequests(request, requestBody);
       }
     } else {
-      await this.addRequestToStack(request, "");
+      await this.addRequestToStack(request, "", harEntry);
     }
   }
 
