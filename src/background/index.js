@@ -74,7 +74,8 @@ export async function init() {
         "https://graph.microsoft.com/*",
         "https://graph.microsoft.us/*",
         "https://dod-graph.microsoft.us/*",
-        "https://microsoftgraph.chinacloudapi.cn/*"
+        "https://microsoftgraph.chinacloudapi.cn/*",
+        "https://main.iam.ad.ext.azure.com/*"
       ]
     },
     ["requestBody"]

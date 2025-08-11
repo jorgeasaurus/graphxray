@@ -43,10 +43,10 @@ export const CodeView = ({ request, lightUrl, snippetLanguage }) => {
       {request.displayRequestUrl && request.displayRequestUrl.length > 0 && (
         <div>
           <div style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}>
-            {request.requestBody && request.requestBody.length > 0 && (
+            {((request.requestBody && request.requestBody.length > 0) || (request.responseContent && request.responseContent.length > 0)) && (
               <IconButton
                 iconProps={{ iconName: isRequestBodyExpanded ? "ChevronDown" : "ChevronRight" }}
-                title={isRequestBodyExpanded ? "Collapse request body" : "Expand request body"}
+                title={isRequestBodyExpanded ? "Collapse request/response" : "Expand request/response"}
                 onClick={toggleRequestBody}
                 onMouseEnter={() => setHoveredButton('expand')}
                 onMouseLeave={() => setHoveredButton(null)}

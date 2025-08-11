@@ -11,7 +11,12 @@ import { initializeIcons } from "@fluentui/font-icons-mdl2";
 import { Layer, LayerHost } from "@fluentui/react/lib/Layer";
 
 const theme = getTheme();
-initializeIcons();
+
+// Initialize icons only once globally
+if (!window._fluentIconsInitialized) {
+  initializeIcons();
+  window._fluentIconsInitialized = true;
+}
 
 const dropdownStyles = {
   dropdown: { width: 300 },
@@ -131,12 +136,11 @@ class DevTools extends React.Component {
           (harEntry.request.url.includes("https://graph.microsoft.com") ||
             harEntry.request.url.includes("https://graph.microsoft.us") ||
             harEntry.request.url.includes("https://dod-graph.microsoft.us") ||
-            harEntry.request.url.includes(
-              "https://microsoftgraph.chinacloudapi.cn"
-            ))
+            harEntry.request.url.includes("https://microsoftgraph.chinacloudapi.cn") || 
+            harEntry.request.url.includes("https://main.iam.ad.ext.azure.com"))
         ) {
           const request = harEntry.request;
-          
+
           // Pass both the request and the harEntry (which has getContent method)
           request._harEntry = harEntry;
 
@@ -198,7 +202,7 @@ class DevTools extends React.Component {
             <p>
               Displays the Graph API calls that are being made by the current
               browser tab. This functionality is available on most portals like
-              Intune Entra blades that use Graph API (E.g. Users, Groups, 
+              Intune Entra blades that use Graph API (E.g. Users, Groups,
               Enterprise Applications, Administrative Units, etc).
             </p>
             <Dropdown

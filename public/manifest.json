@@ -23,7 +23,8 @@
     "https://graph.microsoft.com/",
     "https://graph.microsoft.us/",
     "https://microsoftgraph.chinacloudapi.cn/",
-    "https://dod-graph.microsoft.us/"
+    "https://dod-graph.microsoft.us/",
+    "https://main.iam.ad.ext.azure.com/"
   ],
   "icons": {
     "16": "img/icon-16.png",

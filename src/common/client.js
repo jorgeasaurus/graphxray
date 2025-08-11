@@ -18,6 +18,9 @@ const parseGraphUrl = function (url) {
   } else if (url.includes("https://microsoftgraph.chinacloudapi.cn")) {
     path = url.split("/microsoftgraph.chinacloudapi.cn")[1];
     host = "microsoftgraph.chinacloudapi.cn";
+  } else if (url.includes("https://main.iam.ad.ext.azure.com")) {
+    path = url.split("/main.iam.ad.ext.azure.com")[1];
+    host = "main.iam.ad.ext.azure.com";
   }
 
   return { path, host };
@@ -68,14 +71,14 @@ const getPowershellCmd = async function (snippetLanguage, method, url, body) {
     } else {
       const errorText = await response.text();
       const errorMsg = `DevXError: ${response.status} ${response.statusText} for ${method} ${url} - Response: ${errorText}`;
-      console.error(errorMsg);
+      console.warn(errorMsg);
       return null;
     }
   } catch (error) {
     const errorMsg = `DevXError: Network/Request error for ${method} ${url} - ${
       error.message || error
     }`;
-    console.error(errorMsg, error);
+    console.warn(errorMsg, error);
   }
 };
 
@@ -167,6 +170,7 @@ const getResponseContent = async function (harEntry) {
   let responseContent = "";
   
   console.log("getResponseContent - harEntry:", harEntry);
+  console.log("getResponseContent - harEntry type:", typeof harEntry);
   
   // Try to get response content from harEntry
   if (harEntry && harEntry.response) {
@@ -176,10 +180,25 @@ const getResponseContent = async function (harEntry) {
     console.log("getResponseContent - response content object:", harEntry.response.content);
     
     // Check if response has content directly in the content.text property
-    if (harEntry.response.content && harEntry.response.content.text) {
+    if (harEntry.response.content && harEntry.response.content.text !== undefined) {
       responseContent = harEntry.response.content.text;
+      console.log("getResponseContent - raw content.text:", responseContent, "length:", responseContent.length);
+      
+      // If it's base64 encoded, decode it
+      if (harEntry.response.content.encoding === 'base64') {
+        try {
+          responseContent = atob(harEntry.response.content.text);
+          console.log("getResponseContent - decoded base64 content:", responseContent);
+        } catch (e) {
+          console.log("Failed to decode base64 content:", e);
+          // Keep the original text if decoding fails
+        }
+      }
+      
       console.log("getResponseContent - found content in response.content.text:", responseContent);
-      return responseContent;
+      if (responseContent && responseContent.length > 0) {
+        return responseContent;
+      }
     }
     
     // Try using getResponseBody() method if available (this is different from getContent)
@@ -202,22 +221,32 @@ const getResponseContent = async function (harEntry) {
       }
     }
     
-    // If the above methods don't work, try to access response content through different paths
-    // Sometimes the response content is base64 encoded
-    if (harEntry.response.content) {
-      const content = harEntry.response.content;
-      if (content.text !== undefined) {
-        responseContent = content.text;
-        // If it's base64 encoded, decode it
-        if (content.encoding === 'base64') {
-          try {
-            responseContent = atob(content.text);
-          } catch (e) {
-            console.log("Failed to decode base64 content:", e);
-          }
+    // Try using getContent() method which should get the response content for completed requests
+    if (typeof harEntry.getContent === 'function') {
+      console.log("getResponseContent - trying getContent() method for response content");
+      try {
+        const content = await new Promise((resolve) => {
+          harEntry.getContent((content, encoding) => {
+            console.log("getResponseContent - getContent returned:", content, "encoding:", encoding, "content length:", content ? content.length : 0);
+            resolve(content);
+          });
+        });
+        if (content && content.length > 0) {
+          responseContent = content;
+          console.log("getResponseContent - found content from getContent:", responseContent.substring(0, 200) + "...");
+          return responseContent;
         }
-        console.log("getResponseContent - found content with encoding handling:", responseContent);
-        return responseContent;
+      } catch (error) {
+        console.log("getResponseContent - getContent failed:", error);
+      }
+    }
+    
+    // Final attempt: check if there's any content object with size > 0
+    if (harEntry.response.content && harEntry.response.content.size > 0) {
+      console.log("getResponseContent - response has content with size:", harEntry.response.content.size);
+      // Sometimes the content is there but text property is empty string
+      if (harEntry.response.content.text === "") {
+        console.log("getResponseContent - content.text is empty string but size > 0, this might be an issue with content retrieval");
       }
     }
   }
