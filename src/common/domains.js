@@ -13,7 +13,11 @@ export const GRAPH_DOMAINS = {
     "https://main.iam.ad.ext.azure.com",
     "https://elm.iga.azure.com",
     "https://pds.iga.azure.com",
-    "https://api.accessreviews.identitygovernance.azure.com"
+    "https://api.accessreviews.identitygovernance.azure.com",
+    "https://management.azure.com",
+    "https://admin.microsoft.com",
+    "https://portal.office.com",
+    "https://security.microsoft.com"
     // Additional ultra endpoints can be added here in the future
   ]
 };
@@ -30,6 +34,11 @@ export const getAllowedDomains = (ultraXRayMode = false) => {
 export const isAllowedDomain = (url, ultraXRayMode = false) => {
   const allowedDomains = getAllowedDomains(ultraXRayMode);
   return allowedDomains.some(domain => url.includes(domain));
+};
+
+// Helper function to check if a URL is from an Ultra X-Ray domain
+export const isUltraXRayDomain = (url) => {
+  return GRAPH_DOMAINS.ULTRA_XRAY.some(domain => url.includes(domain));
 };
 
 // Helper function to get all domain URLs for webRequest (includes wildcards)

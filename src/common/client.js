@@ -1,10 +1,17 @@
-import { parseGraphUrl, GRAPH_DOMAINS } from "./domains.js";
+import { parseGraphUrl, GRAPH_DOMAINS, isUltraXRayDomain } from "./domains.js";
 
 const devxEndPoint =
   "https://devxapi-func-prod-eastus.azurewebsites.net/api/graphexplorersnippets";
 
 const getPowershellCmd = async function (snippetLanguage, method, url, body) {
   console.log("Get code snippet from DevX:", url, method);
+  
+  // Check if the URL is from an Ultra X-Ray domain - if so, don't call devx
+  if (isUltraXRayDomain(url)) {
+    console.log("Skipping DevX call for Ultra X-Ray domain:", url);
+    return null;
+  }
+  
   const bodyText = body ?? ""; //Cast undefined and null to string
   // Use the extracted parseGraphUrl function
   const { path: parsedPath, host } = parseGraphUrl(url);

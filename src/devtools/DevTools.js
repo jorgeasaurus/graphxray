@@ -202,9 +202,8 @@ class DevTools extends React.Component {
             <h2>Graph Call Stack Trace</h2>
             <p>
               Displays the Graph API calls that are being made by the current
-              browser tab. This functionality is available on most portals like
-              Intune Entra blades that use Graph API (E.g. Users, Groups,
-              Enterprise Applications, Administrative Units, etc).
+              browser tab. Code conversions are only available for published Graph APIs.
+              Turn on <strong>Ultra X-Ray</strong> mode to see all API calls (open a <a href="https://github.com/merill/graphxray/issues" target="_blank" rel="noreferrer">GitHub issue</a> if there are admin portals or blades that are not being captured).
             </p>
             <div style={{ 
               display: "flex", 
