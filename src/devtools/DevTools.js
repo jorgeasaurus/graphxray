@@ -224,6 +224,7 @@ class DevTools extends React.Component {
                     boxShadow: theme.effects.elevation16,
                     padding: "10px",
                     marginBottom: "15px",
+                    borderRadius: "8px",
                   }}
                 >
                   <CodeView
