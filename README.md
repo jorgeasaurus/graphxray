@@ -70,7 +70,7 @@ The extension works with any web page that makes Graph API calls. We've primaril
 - Microsoft Entra
 - Microsoft Intune
 
-If there are admin portals where you are not seeing Graph X-Ray work as expected, please open an [issue](https://github.com/merill/graphxray/issues).
+If there are admin portals where you are not seeing Graph X-Ray work as expected, please open an [issue](https://github.com/merill/graphxray/issues), even better, submit a pull request by following the steps in [Adding non-Graph API calls to Ultra X-Ray](#adding-non-graph-api-calls-to-ultra-x-ray).
 
 ## Getting Started
 
