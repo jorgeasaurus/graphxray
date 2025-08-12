@@ -39,7 +39,7 @@ const resolveModule = (resolveFn, filePath) => {
 module.exports = {
   dotenv: resolveApp('.env'),
   appPath: resolveApp('.'),
-  appBuild: resolveApp('build'),
+  appBuild: resolveApp('build/graphxray'),
   devAppBuild: resolveApp('dev'),
   appPublic: resolveApp('public'),
   manifestJson: resolveApp('public/manifest.json'),
