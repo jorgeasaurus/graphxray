@@ -3,7 +3,7 @@ import "./DevTools.css";
 import { CodeView } from "../components/CodeView";
 import { AppHeader } from "../components/AppHeader";
 import { FontSizes } from "@fluentui/theme";
-import { PrimaryButton, DefaultPalette, getTheme } from "@fluentui/react";
+import { getTheme } from "@fluentui/react";
 import { getCodeView } from "../common/client.js";
 import { isAllowedDomain } from "../common/domains.js";
 import { Dropdown } from "@fluentui/react/lib/Dropdown";
@@ -11,7 +11,7 @@ import { Toggle } from "@fluentui/react/lib/Toggle";
 import { IconButton } from "@fluentui/react/lib/Button";
 import { TooltipHost } from "@fluentui/react/lib/Tooltip";
 import DevToolsCommandBar from "../components/DevToolsCommandBar";
-import { Layer, LayerHost } from "@fluentui/react/lib/Layer";
+import { Layer } from "@fluentui/react/lib/Layer";
 
 const theme = getTheme();
 

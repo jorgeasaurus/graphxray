@@ -1,8 +1,5 @@
 import "./App.css";
 import React from "react";
-import ReactMarkdown from "react-markdown";
-import SyntaxHighlighter from "react-syntax-highlighter";
-import { atomOneDark } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { PrimaryButton, getTheme } from "@fluentui/react";
 import { FontSizes } from "@fluentui/theme";
 import { AppHeader } from "./components/AppHeader";

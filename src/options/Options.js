@@ -2,7 +2,7 @@ import React from "react";
 import "./Options.css";
 import { AppHeader } from "../components/AppHeader";
 import { FontSizes } from "@fluentui/theme";
-import { PrimaryButton, DefaultPalette, getTheme } from "@fluentui/react";
+import { getTheme } from "@fluentui/react";
 
 const theme = getTheme();
 class Options extends React.Component {
