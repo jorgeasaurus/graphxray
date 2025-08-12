@@ -3,7 +3,7 @@
   "version": "1.0.2",
   "short_name": "Graph X-Ray",
   "name": "Graph X-Ray",
-  "description": "Ever performed an action in the Microsoft admin portals like Entra or Intune and wished you knew how to script it? Graph X-Ray gives you 'X-ray vision'!, instantly showing you the underlying Microsoft Graph API calls for every click. Stop guessing and start automating. Graph X-Ray converts your actions into ready-to-use code in PowerShell, C#, Python, and more.",
+  "description": "Graph X-Ray converts your Microsoft admin portal clicks into ready-to-use code in PowerShell, C#, Python, and more.",
   "action": {
     "default_title": "Graph X-Ray",
     "default_popup": "popup.html"
