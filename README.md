@@ -152,5 +152,13 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
+## Adding non-Graph API calls to Ultra X-Ray
 
+Ultra X-Ray shows calls to non-Graph API endpoints. Unfortunately, we need to explicitly add each endpoint to the extension.
 
+To add support for a new endpoint.
+
+1. **Figure out the API endpoint** - View the network requests in the browser's developer tools and find out the domain where the API is hosted.
+1. **Add domain to [domains.js](./src/common/domains.js)** - Add the new domain to the list of domains in the `domains.js` file.
+1. **Add domain to [manifest.json](./src/public/manifest.json)** - Note the manifest requires the / at the end of the domain.
+1. **Test the endpoint** - Make a request to the new blade and verify that it appears in Graph X-Ray.
