@@ -127,16 +127,24 @@ Scroll down in the Graph X-Ray panel to view the new stack trace.
 
 ## Developer Guide
 
-### On Windows
+### Pre-requisites
 
-`winget install OpenJS.NodeJS.LTS` to install nodejs and npm
+- Install [Node.js](https://nodejs.org/) (which includes npm)
+- Run `npm install` to install dependencies
 
-### On other OS
+### Build the extension
 
-`npm install` to install dependencies
 `npm start` to compile and debug
+
 To load the extension, go to chrome://extensions or edge://extensions, turn on developer mode, click on "load unpacked", and navigate to the ./dev folder.
-`npm run build` to build the extension for production
+
+### Production build
+
+Production builds are automatically created in GitHub with the right version number.
+
+If you want to create a production build of the extension on your desktop, run `npm run build`.
+
+The build artifacts will be placed in the `build` folder.
 
 ## Available Scripts
 
