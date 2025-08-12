@@ -93,11 +93,13 @@ jobs:
           - Automated release from commit ${{ github.sha }}
           
           ### Installation
-          Download the `graphxray-v${{ steps.increment_version.outputs.new_version }}.zip` file and load it as an unpacked extension in your browser.
-          
-          ### Browser Store Links
-          - [Chrome Web Store](https://chrome.google.com/webstore/detail/graph-x-ray/gdhbldfajbedclijgcmmmobdbnjhnpdh)
-          - [Microsoft Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/graph-xray/oplgganppgjhpihgciiifejplnnpodak)
+            - Extract the contents of the `.zip` file.
+            - Open your browser and navigate to
+                - Microsoft Edge: `edge://extensions`
+                - Google Chrome: `chrome://extensions`
+            - Enable "Developer mode" by toggling the switch (usually in the bottom left or top right corner).
+            - Click on "Load unpacked" and select the extracted folder.          
+
         draft: false
         prerelease: false
 

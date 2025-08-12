@@ -43,12 +43,24 @@ Supercharge your Microsoft 365 workflow. Install Graph X-Ray today and turn your
 
 ## Install
 
-Install the Graph X-Ray extension for your favorite browser:
+Install the Graph X-Ray extension for your favorite browser.
 
 | Microsoft Edge | Google Chrome |
 |-|-|
 | [![Microsoft Edge Add-ons](https://img.shields.io/badge/Microsoft_Edge-Install_Graph_X--Ray-0078d4?style=for-the-badge&logo=microsoft-edge&logoColor=white)](https://microsoftedge.microsoft.com/addons/detail/graph-xray/oplgganppgjhpihgciiifejplnnpodak) | [![Chrome Web Store](https://img.shields.io/badge/Google_Chrome-Install_Graph_X--Ray-4285f4?style=for-the-badge&logo=google-chrome&logoColor=white)](https://chrome.google.com/webstore/detail/graph-x-ray/gdhbldfajbedclijgcmmmobdbnjhnpdh) |
 |![Edge Web Store Users](https://img.shields.io/badge/Microsoft_Edge_--_Users-10k-gray?style=social&color=purple) ![Edge Web Store Stars](https://img.shields.io/chrome-web-store/stars/gdhbldfajbedclijgcmmmobdbnjhnpdh?style=social&label=Microsoft%20Edge%20-%20Rating&color=purple) | ![Chrome Web Store Users](https://img.shields.io/chrome-web-store/users/gdhbldfajbedclijgcmmmobdbnjhnpdh?style=social&label=Chrome%20-%20Users&color=purple) ![Chrome Web Store Stars](https://img.shields.io/chrome-web-store/stars/gdhbldfajbedclijgcmmmobdbnjhnpdh?style=social&label=Chrome%20-%20Rating&color=purple) |
+
+### Manual Install
+
+To manually install the Graph X-Ray extension, download the latest release from the [GitHub Releases page](https://github.com/merill/graphxray/releases) and follow the instructions for your browser.
+
+- Download the latest `.zip` file from the [Releases page](https://github.com/merill/graphxray/releases).
+- Extract the contents of the `.zip` file.
+- Open your browser and navigate to
+  - Microsoft Edge: `edge://extensions`
+  - Google Chrome: `chrome://extensions`
+- Enable "Developer mode" by toggling the switch (usually in the bottom left or top right corner).
+- Click on "Load unpacked" and select the extracted folder.
 
 ## Supported Microsoft Graph Endpoints
 
@@ -68,7 +80,7 @@ The extension works with any web page that makes Graph API calls. We've primaril
 
 If there are admin portals where you are not seeing Graph X-Ray work as expected, please open an [issue](https://github.com/merill/graphxray/issues), even better, submit a pull request by following the steps in [Adding non-Graph API calls to Ultra X-Ray](#adding-non-graph-api-calls-to-ultra-x-ray).
 
-## Getting Started
+## Using Graph X-Ray
 
 ### Viewing the Graph call stack trace
 
