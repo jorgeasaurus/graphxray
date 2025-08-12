@@ -1,14 +1,9 @@
-[![Microsoft Edge Add-ons](https://img.shields.io/badge/Microsoft_Edge-Install_Graph_X--Ray-0078d4?style=for-the-badge&logo=microsoft-edge&logoColor=white)](https://microsoftedge.microsoft.com/addons/detail/graph-xray/oplgganppgjhpihgciiifejplnnpodak)
-
-[![Chrome Web Store](https://img.shields.io/badge/Chrome-Install_Graph_X--Ray-4285f4?style=for-the-badge&logo=google-chrome&logoColor=white)](https://chrome.google.com/webstore/detail/graph-x-ray/gdhbldfajbedclijgcmmmobdbnjhnpdh)
-
-![Edge Web Store Users](https://img.shields.io/badge/Microsoft_Edge_--_Users-10k-ffffffgreen?style=flat-square)
-![Edge Web Store Stars](https://img.shields.io/chrome-web-store/stars/gdhbldfajbedclijgcmmmobdbnjhnpdh?style=flat-square&label=Microsoft%20Edge%20-%20Rating)
-
-![Chrome Web Store Users](https://img.shields.io/chrome-web-store/users/gdhbldfajbedclijgcmmmobdbnjhnpdh?style=flat-square&label=Chrome%20-%20Users)
-![Chrome Web Store Stars](https://img.shields.io/chrome-web-store/stars/gdhbldfajbedclijgcmmmobdbnjhnpdh?style=flat-square&label=Chrome%20-%20Rating)
-
 # Graph X-Ray: See the Code Behind the Clicks
+
+| Microsoft Edge | Google Chrome |
+|-|-|
+| [![Microsoft Edge Add-ons](https://img.shields.io/badge/Microsoft_Edge-Install_Graph_X--Ray-0078d4?style=for-the-badge&logo=microsoft-edge&logoColor=white)](https://microsoftedge.microsoft.com/addons/detail/graph-xray/oplgganppgjhpihgciiifejplnnpodak) | [![Chrome Web Store](https://img.shields.io/badge/Google_Chrome-Install_Graph_X--Ray-4285f4?style=for-the-badge&logo=google-chrome&logoColor=white)](https://chrome.google.com/webstore/detail/graph-x-ray/gdhbldfajbedclijgcmmmobdbnjhnpdh) |
+|![Edge Web Store Users](https://img.shields.io/badge/Microsoft_Edge_--_Users-10k-gray?style=social&color=purple) ![Edge Web Store Stars](https://img.shields.io/chrome-web-store/stars/gdhbldfajbedclijgcmmmobdbnjhnpdh?style=social&label=Microsoft%20Edge%20-%20Rating&color=purple) | ![Chrome Web Store Users](https://img.shields.io/chrome-web-store/users/gdhbldfajbedclijgcmmmobdbnjhnpdh?style=social&label=Chrome%20-%20Users&color=purple) ![Chrome Web Store Stars](https://img.shields.io/chrome-web-store/stars/gdhbldfajbedclijgcmmmobdbnjhnpdh?style=social&label=Chrome%20-%20Rating&color=purple) |
 
 Unlock the power of automation and learning in the Microsoft 365 ecosystem. Graph X-Ray is a developer tool that demystifies the Microsoft admin portals by revealing the exact Microsoft Graph API calls being made in the background as you work.
 
@@ -50,9 +45,10 @@ Supercharge your Microsoft 365 workflow. Install Graph X-Ray today and turn your
 
 Install the Graph X-Ray extension for your favorite browser:
 
-[![Microsoft Edge Add-ons](https://img.shields.io/badge/Microsoft_Edge-Install_Graph_X--Ray-0078d4?style=for-the-badge&logo=microsoft-edge&logoColor=white)](https://microsoftedge.microsoft.com/addons/detail/graph-xray/oplgganppgjhpihgciiifejplnnpodak)
-
-[![Chrome Web Store](https://img.shields.io/badge/Chrome-Install_Graph_X--Ray-4285f4?style=for-the-badge&logo=google-chrome&logoColor=white)](https://chrome.google.com/webstore/detail/graph-x-ray/gdhbldfajbedclijgcmmmobdbnjhnpdh) 
+| Microsoft Edge | Google Chrome |
+|-|-|
+| [![Microsoft Edge Add-ons](https://img.shields.io/badge/Microsoft_Edge-Install_Graph_X--Ray-0078d4?style=for-the-badge&logo=microsoft-edge&logoColor=white)](https://microsoftedge.microsoft.com/addons/detail/graph-xray/oplgganppgjhpihgciiifejplnnpodak) | [![Chrome Web Store](https://img.shields.io/badge/Google_Chrome-Install_Graph_X--Ray-4285f4?style=for-the-badge&logo=google-chrome&logoColor=white)](https://chrome.google.com/webstore/detail/graph-x-ray/gdhbldfajbedclijgcmmmobdbnjhnpdh) |
+|![Edge Web Store Users](https://img.shields.io/badge/Microsoft_Edge_--_Users-10k-gray?style=social&color=purple) ![Edge Web Store Stars](https://img.shields.io/chrome-web-store/stars/gdhbldfajbedclijgcmmmobdbnjhnpdh?style=social&label=Microsoft%20Edge%20-%20Rating&color=purple) | ![Chrome Web Store Users](https://img.shields.io/chrome-web-store/users/gdhbldfajbedclijgcmmmobdbnjhnpdh?style=social&label=Chrome%20-%20Users&color=purple) ![Chrome Web Store Stars](https://img.shields.io/chrome-web-store/stars/gdhbldfajbedclijgcmmmobdbnjhnpdh?style=social&label=Chrome%20-%20Rating&color=purple) |
 
 ## Supported Microsoft Graph Endpoints
 
