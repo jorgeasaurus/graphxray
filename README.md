@@ -1,29 +1,110 @@
-# Getting Started 
+# Graph X-Ray: See the Code Behind the Clicks
 
-This is a Chromium (Edge and Chrome) extension, and was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Unlock the power of automation and learning in the Microsoft 365 ecosystem. Graph X-Ray is a developer tool that demystifies the Microsoft admin portals by revealing the exact Microsoft Graph API calls being made in the background as you work.
+
+Stop spending hours digging through documentation to figure out how to automate a task. Simply perform the action in the portal, and Graph X-Ray will provide you with the corresponding, ready-to-use script. It's the ultimate "learn by doing" tool for Microsoft Graph.
+
+## Key Features
+
+- **API Call Inspection**: Capture and inspect all Microsoft Graph API requests (GET, POST, PATCH, DELETE) and their full responses directly within your browser's developer tools.
+
+- **Instant Script Generation**: Automatically convert recorded API calls into functional code snippets.
+
+- **Multi-Language Support**: Generate scripts in the most popular languages for M365 automation, including:
+
+  - Microsoft Graph PowerShell
+  - Python
+  - C#
+  - JavaScript
+  - Go
+  - Java
+  - Objective-C
+
+- **Accelerate Automation**: Go from a manual, repetitive task in the UI to a fully automated script in seconds.
+
+## Who is this for?
+
+- **Microsoft 365 Administrators** wanting to automate user management, policy configuration, and reporting.
+
+- **DevOps Engineers** building CI/CD pipelines for Microsoft 365 and Azure environments.
+
+- **Developers** creating applications that integrate with Microsoft Graph.
+
+- **IT Consultants & Support Professionals** who need to quickly script solutions for clients.
+
+Supercharge your Microsoft 365 workflow. Install Graph X-Ray today and turn your clicks into code!
 
 ## Supported Microsoft Graph Endpoints
 
 The extension detects and generates code snippets for Microsoft Graph calls across:
+
 - **graph.microsoft.com** (Public cloud)
 - **graph.microsoft.us** (US Government cloud - GCC High)
+- **dod-graph.microsoft.us** (US Department of Defense)
+- **microsoftgraph.chinacloudapi.cn** (China cloud)
 
-## Supported Azure Portal Environments
+## Supported Microsoft Admin Portal Environments
 
-The extension works with:
-- **portal.azure.com** (Public cloud)
-- **portal.azure.us** (US Government cloud)
+The extension works with any web page that makes Graph API calls. We've primarily tested with
 
-## Cloning on Windows
-To avoid issues with prettier formatting for line feeds turn off auto crlf before cloning.
-`git config --global core.autocrlf false` to disable git
-On VSCode change end of line sequence from CRLF to LF (bottom right on status bar)
+- Microsoft Entra
+- Microsoft Intune
 
-## Installation
+If there are admin portals where you are not seeing Graph X-Ray work as expected, please open an [issue](https://github.com/merill/graphxray/issues).
+
+## Getting Started
+
+### Viewing the Graph call stack trace
+
+To view Graph calls in real-time:
+
+- Browse to the **Microsoft admin portal (Entra, Intune...)**
+- Open **Developer Tools**
+- Open the **Graph X-Ray panel** in Developer Tools
+- Make changes in the portal to record and view the corresponding Graph API calls and PowerShell commands
+
+![Demo of opening Graph X-Ray panel](./public/img/tutorial/graphxraydemo.gif)
+
+### Step by step guide
+
+#### Open Developer Tools
+
+##### Using the keyboard
+
+- Press **F12** on Windows
+- Press **Cmd+Opt+I** on macOS
+
+##### Using the menu
+
+- On Microsoft Edge open the menu from the top right then select **Extensions**
+- On Google Chrome open the menu from the top right then select **More Tools** and click **Extensions**
+
+![Screenshot of selecting Developer Tools in Edge](./public/img/tutorial/Tutorial-1.png)
+
+#### Open the Graph X-Ray panel
+
+Expand the tabs in Developer Tools and select the Graph X-Ray panel.
+
+If you don't see the Graph X-Ray panel you may need to restart your browser.
+
+![Screenshot of opening Graph X-Ray pane](./public/img/tutorial/Tutorial-2.png)
+
+#### View Graph call stack trace
+
+Make changes in the Azure Portal to view the corresponding Graph API calls and PowerShell commands for the action (e.g. edit a user's profile information and click Save).
+
+Scroll down in the Graph X-Ray panel to view the new stack trace.
+
+![Screenshot of viewing graph changes](./public/img/tutorial/Tutorial-3.png)
+
+## Developer Guide
+
 ### On Windows
+
 `winget install OpenJS.NodeJS.LTS` to install nodejs and npm
 
 ### On other OS
+
 `npm install` to install dependencies
 `npm start` to compile and debug
 To load the extension, go to chrome://extensions or edge://extensions, turn on developer mode, click on "load unpacked", and navigate to the ./dev folder.
@@ -51,42 +132,5 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)

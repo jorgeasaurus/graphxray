@@ -1,5 +1,3 @@
-// let localObj = {};
-
 const saveObjectInLocalStorage = async function (obj) {
   return new Promise((resolve, reject) => {
     try {
@@ -12,30 +10,9 @@ const saveObjectInLocalStorage = async function (obj) {
   });
 };
 
-// const updateCurrentMetrics = function (obj) {
-//   console.log("update current metrics new val");
-//   console.log(obj.currentMetrics);
-//   console.log("update current metrics obj");
-//   console.log(localObj);
-
-//   if (
-//     "currentMetrics" in obj &&
-//     Object.keys(obj.currentMetrics.newValue).length != 0
-//   ) {
-//     localObj = obj.currentMetrics.newValue;
-//   }
-//   console.log("update current metrics obj after");
-//   console.log(localObj);
-// };
-
 const getObjectFromLocalStorage = async function (key) {
   return new Promise((resolve, reject) => {
     try {
-      // if (key == "currentMetrics" && Object.keys(localObj).length > 0) {
-      //   console.log("local hit");
-      //   console.log(localObj);
-      //   resolve(localObj);
-      // }
       chrome.storage.local.get(key, function (value) {
         resolve(value[key]);
       });
@@ -52,7 +29,6 @@ const commitIfActive = async function (obj) {
   }
 };
 
-//const getIsActive = async () => await getObjectFromLocalStorage("isActive");
 const getIsActive = async () => {
   return true;
 };
@@ -82,30 +58,6 @@ const addConcepts = async (i = 1) => {
     },
   });
 };
-
-// const addClicks = async (i = 1) => {
-//   console.log("called");
-//   lock.acquire(
-//     "storage",
-//     async (done) => {
-//       console.log("locked");
-//       const currentMetrics = await getObjectFromLocalStorage("currentMetrics");
-//       let { clicks } = currentMetrics;
-//       await commitIfActive({
-//         currentMetrics: {
-//           ...currentMetrics,
-//           clicks: clicks + i,
-//         },
-//       });
-//       done();
-//     },
-
-//     () => {
-//       console.log("lock released");
-//     }
-//   );
-//   console.log("getting clicks");
-// };
 
 const addClicks = async (i = 1) => {
   const currentMetrics = await getObjectFromLocalStorage("currentMetrics");

@@ -1,12 +1,7 @@
 import * as React from "react";
 import { CommandBar } from "@fluentui/react/lib/CommandBar";
-import { DefaultPalette, Separator } from "@fluentui/react";
 
 class DevToolsCommandBar extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     const _items = [
       {

@@ -39,7 +39,7 @@ class Options extends React.Component {
                 To view Graph calls in real-time
                 <ul>
                   <li>
-                    Browse to the <b>Azure Portal</b>
+                    Browse to the <b>Microsoft admin portal (Entra, Intune...)</b>
                   </li>
                   <li>
                     open <b>Developer Tools</b>
@@ -48,7 +48,7 @@ class Options extends React.Component {
                     open the <b>Graph X-Ray panel</b> in Developer Tools
                   </li>
                   <li>
-                    make changes in the Azure Portal to record and view the
+                    make changes in the portal to record and view the
                     corresponding Graph API calls and PowerShell commands
                   </li>
                 </ul>
