@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "version": "0.0.6",
+  "version": "0.0.7",
   "short_name": "Graph X-Ray",
   "name": "Graph X-Ray",
   "description": "Ever performed an action in the Microsoft 365 or Entra admin portal and wished you knew how to script it? Graph X-Ray gives you 'X-ray vision', instantly showing you the underlying Microsoft Graph API calls for every click. Stop guessing and start automating. Graph X-Ray converts your actions into ready-to-use code in PowerShell, C#, Python, and more.",
