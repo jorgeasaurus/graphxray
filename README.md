@@ -1,8 +1,20 @@
+[![Microsoft Edge Add-ons](https://img.shields.io/badge/Microsoft_Edge-Install_Graph_X--Ray-0078d4?style=for-the-badge&logo=microsoft-edge&logoColor=white)](https://microsoftedge.microsoft.com/addons/detail/graph-xray/oplgganppgjhpihgciiifejplnnpodak)
+
+[![Chrome Web Store](https://img.shields.io/badge/Chrome-Install_Graph_X--Ray-4285f4?style=for-the-badge&logo=google-chrome&logoColor=white)](https://chrome.google.com/webstore/detail/graph-x-ray/gdhbldfajbedclijgcmmmobdbnjhnpdh)
+
+![Edge Web Store Users](https://img.shields.io/badge/Microsoft_Edge_--_Users-10k-ffffffgreen?style=flat-square)
+![Edge Web Store Stars](https://img.shields.io/chrome-web-store/stars/gdhbldfajbedclijgcmmmobdbnjhnpdh?style=flat-square&label=Microsoft%20Edge%20-%20Rating)
+
+![Chrome Web Store Users](https://img.shields.io/chrome-web-store/users/gdhbldfajbedclijgcmmmobdbnjhnpdh?style=flat-square&label=Chrome%20-%20Users)
+![Chrome Web Store Stars](https://img.shields.io/chrome-web-store/stars/gdhbldfajbedclijgcmmmobdbnjhnpdh?style=flat-square&label=Chrome%20-%20Rating)
+
 # Graph X-Ray: See the Code Behind the Clicks
 
 Unlock the power of automation and learning in the Microsoft 365 ecosystem. Graph X-Ray is a developer tool that demystifies the Microsoft admin portals by revealing the exact Microsoft Graph API calls being made in the background as you work.
 
 Stop spending hours digging through documentation to figure out how to automate a task. Simply perform the action in the portal, and Graph X-Ray will provide you with the corresponding, ready-to-use script. It's the ultimate "learn by doing" tool for Microsoft Graph.
+
+![Demo of opening Graph X-Ray panel](./public/img/tutorial/graphxraydemo.gif)
 
 ## Key Features
 
@@ -33,6 +45,14 @@ Stop spending hours digging through documentation to figure out how to automate 
 - **IT Consultants & Support Professionals** who need to quickly script solutions for clients.
 
 Supercharge your Microsoft 365 workflow. Install Graph X-Ray today and turn your clicks into code!
+
+## Install
+
+Install the Graph X-Ray extension for your favorite browser:
+
+[![Microsoft Edge Add-ons](https://img.shields.io/badge/Microsoft_Edge-Install_Graph_X--Ray-0078d4?style=for-the-badge&logo=microsoft-edge&logoColor=white)](https://microsoftedge.microsoft.com/addons/detail/graph-xray/oplgganppgjhpihgciiifejplnnpodak)
+
+[![Chrome Web Store](https://img.shields.io/badge/Chrome-Install_Graph_X--Ray-4285f4?style=for-the-badge&logo=google-chrome&logoColor=white)](https://chrome.google.com/webstore/detail/graph-x-ray/gdhbldfajbedclijgcmmmobdbnjhnpdh) 
 
 ## Supported Microsoft Graph Endpoints
 
