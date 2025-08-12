@@ -178,3 +178,13 @@ To add support for a new endpoint.
 1. **Add domain to [domains.js](./src/common/domains.js)** - Add the new domain to the list of domains in the `domains.js` file.
 1. **Add domain to [manifest.json](./src/public/manifest.json)** - Note the manifest requires the / at the end of the domain.
 1. **Test the endpoint** - Make a request to the new blade and verify that it appears in Graph X-Ray.
+
+## Feedback and Support
+
+This is an independently developed application and is not endorsed or supported by Microsoft.
+
+Please share feedback and report issues on [Github](https://github.com/merill/graphxray/issues).
+
+## Acknowledgements
+
+This project was originally a hackathon project by [Eunice](https://twitter.com/Eunixnho), Dhruv, Clement, [Monica](https://twitter.com/mumbihere)  & [@merill](https://twitter.com/merill).
