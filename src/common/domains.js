@@ -18,7 +18,8 @@ export const GRAPH_DOMAINS = {
     "https://admin.microsoft.com",
     "https://portal.office.com",
     "https://security.microsoft.com",
-    "https://graph.windows.net"
+    "https://graph.windows.net",
+    "https://api.azrbac.mspim.azure.com"
     // Additional ultra endpoints can be added here in the future
   ]
 };
